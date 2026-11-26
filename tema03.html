@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📚 Tema 03 • SEO Avançado — Guia Rápido</title>
+<style>
+  :root{
+    --bg:#0b1220; --surface:#151f36; --surface-2:#1c2a44;
+    --primary:#38bdf8; --primary-dark:#0284c7; --accent:#f59e0b;
+    --purple:#8b5cf6; --pink:#ec4899; --ok:#10b981; --no:#ef4444;
+    --text:#f8fafc; --text-muted:#cbd5e1; --border:#2a3854;
+    --radius:16px; --trans:all .2s ease;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:radial-gradient(circle at 10% 12%,#1e3a8a 0%,var(--bg) 65%);
+    color:var(--text);min-height:100vh;line-height:1.6;padding:20px 14px 80px;}
+  .container{max-width:900px;margin:0 auto;}
+  .header{background:linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#7c3aed 100%);
+    border-radius:var(--radius);padding:28px 22px;text-align:center;
+    box-shadow:0 12px 35px rgba(0,0,0,.4);margin-bottom:18px;}
+  .header h1{font-size:clamp(1.3rem,3.5vw,1.7rem);font-weight:900;letter-spacing:-.5px;
+    color:#fff;margin-bottom:6px;}
+  .header h1 span{color:#fef08a;}
+  .header p{color:#e0f2fe;font-size:.9rem;max-width:680px;margin:0 auto;}
+  .header .aviso{margin-top:12px;font-size:.76rem;color:#fef08a;opacity:.9;}
+  .tabs-nav{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px;scrollbar-width:thin;}
+  .tab-btn{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);
+    padding:9px 14px;border-radius:30px;font-size:.78rem;font-weight:700;
+    cursor:pointer;white-space:nowrap;transition:var(--trans);font-family:inherit;}
+  .tab-btn:hover{color:#fff;background:var(--surface-2);}
+  .tab-btn.active{background:linear-gradient(135deg,#0284c7,#2563eb);color:#fff;
+    border-color:var(--primary);box-shadow:0 0 12px rgba(56,189,248,.4);}
+  .tab-content{display:none;animation:fade .25s ease;}
+  .tab-content.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+  .card{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);
+    padding:22px 20px;margin-bottom:16px;box-shadow:0 8px 22px rgba(0,0,0,.3);}
+  .card h2{font-size:1.15rem;color:#fff;margin-bottom:12px;display:flex;align-items:center;
+    gap:10px;border-left:5px solid var(--primary);padding-left:12px;line-height:1.35;}
+  .card h3{font-size:.92rem;color:var(--primary);margin:16px 0 6px;display:flex;align-items:center;gap:6px;}
+  .card h3:first-of-type{margin-top:0;}
+  .card p{color:var(--text-muted);font-size:.9rem;margin-bottom:8px;}
+  .card p strong{color:#fff;}
+  .card ul{padding-left:20px;color:var(--text-muted);font-size:.88rem;line-height:1.7;margin-bottom:8px;}
+  .card li strong{color:#fff;}
+  .bloco{background:#0f182c;border:1px solid var(--border);border-left:4px solid var(--primary);
+    border-radius:10px;padding:14px 16px;margin:10px 0;}
+  .bloco.oque{border-left-color:var(--primary);}
+  .bloco.porque{border-left-color:var(--accent);}
+  .bloco.exemplo{border-left-color:var(--ok);}
+  .bloco .tag{font-size:.68rem;font-weight:900;text-transform:uppercase;letter-spacing:.5px;
+    display:block;margin-bottom:6px;}
+  .bloco.oque .tag{color:var(--primary);}
+  .bloco.porque .tag{color:var(--accent);}
+  .bloco.exemplo .tag{color:var(--ok);}
+  .bloco p,.bloco ul{font-size:.86rem;color:var(--text-muted);margin-bottom:4px;}
+  .bloco p:last-child,.bloco ul:last-child{margin-bottom:0;}
+  .bloco strong{color:#fff;}
+  .mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin:10px 0;}
+  .mini{background:#0f182c;border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+  .mini strong{font-size:.84rem;color:#fff;display:block;margin-bottom:2px;}
+  .mini small{font-size:.76rem;color:var(--text-muted);line-height:1.4;display:block;}
+  .callout{background:rgba(56,189,248,.1);border-left:4px solid var(--primary);
+    border-radius:8px;padding:10px 14px;font-size:.84rem;color:#e0f2fe;
+    line-height:1.6;margin:10px 0;}
+  .callout strong{color:#fff;}
+  .links-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+  .link-lab{display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,.12);
+    border:1px solid var(--ok);color:#d1fae5;padding:6px 14px;border-radius:20px;
+    font-size:.78rem;font-weight:800;text-decoration:none;transition:var(--trans);}
+  .link-lab:hover{background:rgba(16,185,129,.25);color:#fff;}
+  .footer-card{background:var(--surface);border-radius:var(--radius);padding:20px;
+    margin-top:20px;text-align:center;border:2px solid var(--border);}
+  .footer-card h4{font-size:.9rem;color:#fff;margin-bottom:8px;}
+  .footer-card p{font-size:.82rem;color:var(--text-muted);margin-bottom:12px;}
+  .footer-acoes{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .footer-card a{display:inline-flex;align-items:center;gap:8px;background:#0f182c;
+    border:1px solid var(--primary);padding:10px 18px;border-radius:10px;
+    color:var(--text);text-decoration:none;font-size:.84rem;font-weight:700;transition:var(--trans);}
+  .footer-card a:hover{background:#0c2a45;border-color:#38bdf8;}
+  .footer-card a.sec{border-color:var(--ok);}
+  .footer-card a.sec:hover{background:#0d1e1b;border-color:#34d399;}
+  @media (max-width:600px){
+    .card{padding:16px 14px;}
+    .card h2{font-size:1rem;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="header">
+    <h1>📚 Tema <span>03</span> • SEO Avançado</h1>
+    <p>Guia rápido para consulta durante as práticas. Cada aba traz o essencial: o que é, por que importa e um exemplo direto.</p>
+    <div class="aviso">⏱️ Leitura completa: ~12 min • Base: apostila oficial Proz • Depois, pratique nos Labs e no Desafio.</div>
+  </header>
+
+  <nav class="tabs-nav">
+    <button class="tab-btn active" data-aba="aba-onpage">📝 1. On-Page</button>
+    <button class="tab-btn" data-aba="aba-voz">🗣️ 2. Voz</button>
+    <button class="tab-btn" data-aba="aba-schema">📊 3. Schema</button>
+    <button class="tab-btn" data-aba="aba-linkbuilding">🔗 4. Link Building</button>
+    <button class="tab-btn" data-aba="aba-tecnico">⚙️ 5. SEO Técnico</button>
+    <button class="tab-btn" data-aba="aba-palavras">🔍 6. Palavras-chave</button>
+    <button class="tab-btn" data-aba="aba-mobile">📱 7. Mobile • Loja • Local</button>
+    <button class="tab-btn" data-aba="aba-metricas">📈 8. Métricas</button>
+  </nav>
+
+  <!-- ABA 1 — ON-PAGE -->
+  <div id="aba-onpage" class="tab-content active">
+    <section class="card">
+      <h2>📝 Otimização On-Page Avançada</h2>
+      <div class="bloco oque">
+        <span class="tag">O que é</span>
+        <p>É otimizar elementos <strong>dentro do próprio site</strong> além do básico. A apostila lista <strong>10 técnicas</strong>: títulos e metas exclusivos, cauda longa e semântica, atributos ALT descritivos, URLs amigáveis, Schema, landing pages segmentadas, velocidade, conteúdo interativo, testes A/B e mobile-first.</p>
+      </div>
+      <div class="bloco porque">
+        <span class="tag">Por que importa</span>
+        <p>Cada página compete por cliques e atenção. Títulos repetidos derrubam o CTR, enquanto páginas rápidas, segmentadas e interativas aumentam o tempo de permanência e a conversão.</p>
+      </div>
+      <div class="bloco exemplo">
+        <span class="tag">Exemplo rápido</span>
+        <p><strong>Título único:</strong> "Guia de SEO Local para Clínicas 2026" • <strong>URL:</strong> /seo-local-clinicas • <strong>ALT:</strong> "Painel do Google Meu Negócio aberto no celular" • <strong>Teste A/B:</strong> comparar dois textos de botão CTA.</p>
+      </div>
+      <div class="links-row">
+        <a href="lab.html#lab01" class="link-lab">🧪 Praticar no Lab 01 (Meta Tags)</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- ABA 2 — VOZ -->
+  <div id="aba-voz" class="tab-content">
+    <section class="card">
+      <h2>🗣️ Otimização para Pesquisa por Voz</h2>
+      <div class="bloco oque">
+        <span class="tag">O que é</span>
+        <p>É estruturar o conteúdo para assistentes inteligentes (Google Assistente, Alexa, Siri) usando <strong>linguagem natural e coloquial</strong>, intenção do usuário, formato de <strong>perguntas e respostas (P&amp;R)</strong>, foco local, respostas diretas para <em>snippets</em> em destaque e boa experiência mobile.</p>
+      </div>
+      <div class="bloco porque">
+        <span class="tag">Por que importa</span>
+        <p>Quem fala faz <strong>perguntas completas</strong> como numa conversa, não digita termos soltos. Assistentes leem em voz alta apenas a resposta mais clara e concisa.</p>
+      </div>
+      <div class="bloco exemplo">
+        <span class="tag">Exemplo rápido</span>
+        <p><strong>Evite:</strong> "SEO Avançado - Guia"<br>
+        <strong>Use (P&amp;R):</strong> "Como fazer SEO local para minha loja?" → Resposta objetiva logo nas 2 ou 3 primeiras frases, em vocabulário simples.</p>
+      </div>
+      <div class="links-row">
+        <a href="lab.html#lab06" class="link-lab">🧪 Praticar no Lab 06 (Pesquisa por Voz)</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- ABA 3 — SCHEMA -->
+  <div id="aba-schema" class="tab-content">
+    <section class="card">
+      <h2>📊 Dados Estruturados e Schema</h2>
+      <div class="bloco oque">
+        <span class="tag">O que é</span>
+        <p>É organizar informações em código padrão (<strong>Schema.org</strong>, geralmente em <code>JSON-LD</code>) para os buscadores entenderem melhor a página. Os <strong>5 tipos comuns</strong> na apostila são: <strong>Artigo, Receita, Evento, Produto e Avaliação</strong>.</p>
+      </div>
+      <div class="bloco porque">
+        <span class="tag">Por que importa</span>
+        <p>Gera <strong>Rich Snippets</strong> (estrelas, preços, estoque, datas) direto nos resultados do Google, aumentando a confiança, o CTR e a precisão na leitura por assistentes de voz.</p>
+      </div>
+      <div class="bloco exemplo">
+        <span class="tag">Exemplo rápido</span>
+        <p>Marcação <code>Product</code> com <code>price: 79.90</code>, <code>InStock</code> e <code>ratingValue: 4.8</code>. Sempre valide no <strong>Teste de Dados Estruturados do Google</strong> e mantenha os dados atualizados.</p>
+      </div>
+      <div class="links-row">
+        <a href="lab.html#lab02" class="link-lab">🧪 Lab 02 (Rich Snippet)</a>
+        <a href="lab.html#lab03" class="link-lab">🧪 Lab 03 (Gerador JSON-LD)</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- ABA 4 — LINK BUILDING -->
+  <div id="aba-linkbuilding" class="tab-content">
+    <section class="card">
+      <h2>🔗 Link Building Estratégico</h2>
+      <div class="bloco oque">
+        <span class="tag">O que é</span>
+        <p>É fortalecer a autoridade do site obtendo <strong>backlinks de qualidade</strong> por 4 abordagens: <strong>Guest Posting</strong>, <strong>Outreach personalizado</strong>, <strong>Conteúdo excepcional</strong> e <strong>Comunidades</strong> — além de analisar concorrentes e buscar menções sem link.</p>
+      </div>
+      <div class="bloco porque">
+        <span class="tag">Por que importa</span>
+        <p>Links de sites confiáveis e do mesmo nicho provam relevância ao Google e geram tráfego direto. <strong>Qualidade vale mais que quantidade:</strong> comprar links ou fazer troca excessiva gera penalização.</p>
+      </div>
+      <div class="bloco exemplo">
+        <span class="tag">Exemplo rápido</span>
+        <p>Publicar um estudo original que outros blogs citam naturalmente, ou escrever um artigo convidado em um portal respeitado do seu setor — nunca comprar pacotes de links.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- ABA 5 — SEO TÉCNICO -->
+  <div id="aba-tecnico" class="tab-content">
+    <section class="card">
+      <h2>⚙️ SEO Técnico e Velocidade de Página</h2>
+      <div class="bloco oque">
+        <span class="tag">O que é</span>
+        <p>Cuida da <strong>infraestrutura interna</strong> (5 pilares: URLs amigáveis e redirecionamentos 301/302, sitemap XML, tags canônicas contra duplicidade, <code>robots.txt</code> e HTTPS) e da <strong>velocidade</strong> (5 pilares: comprimir imagens/scripts, cache do navegador, carregamento assíncrono, compactação GZIP e experiência móvel).</p>
+      </div>
+      <div class="bloco porque">
+        <span class="tag">Por que importa</span>
+        <p>Sem base técnica saudável, páginas importantes nem são indexadas. E site lento ou inseguro (sem HTTPS) aumenta a rejeição e perde posições e conversões.</p>
+      </div>
+      <div class="bloco exemplo">
+        <span class="tag">Exemplo rápido</span>
+        <p>Trocar <code>/p?id=42&amp;cat=15</code> por <code>/camisetas-artesanais</code>, ativar HTTPS, enviar o <code>sitemap.xml</code> e usar <code>rel="canonical"</code> em URLs parecidas.</p>
+      </div>
+      <div class="links-row">
+        <a href="lab.html#lab05" class="link-lab">🧪 Praticar no Lab 05 (URL Amigável)</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- ABA 6 — PALAVRAS-CHAVE -->
+  <div id="aba-palavras" class="tab-content">
+    <section class="card">
+      <h2>🔍 Pesquisa de Palavras-Chave Avançada</h2>
+      <div class="bloco oque">
+        <span class="tag">O que é</span>
+        <p>Vai além de termos populares: analisa <strong>intenção do usuário</strong> (informativa, transacional ou navegação), <strong>cauda longa</strong>, ferramentas (Keyword Planner, SEMrush, Ahrefs, Moz), concorrentes, semântica, lacunas de conteúdo, longevidade do tema, segmentação local e priorização estratégica.</p>
+      </div>
+      <div class="bloco porque">
+        <span class="tag">Por que importa</span>
+        <p>Termos genéricos têm concorrência altíssima e pouca conversão. Palavras de cauda longa têm menos disputa e atraem visitantes prontos para agir.</p>
+      </div>
+      <div class="bloco exemplo">
+        <span class="tag">Exemplo rápido</span>
+        <p>Em vez de disputar só <strong>"marketing"</strong>, criar conteúdo focado em <strong>"marketing digital para clínica em Juiz de Fora"</strong> — intenção clara, foco local e maior taxa de conversão.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- ABA 7 — MOBILE, E-COMMERCE E LOCAL -->
+  <div id="aba-mobile" class="tab-content">
+    <section class="card">
+      <h2>📱 Mobile &amp; AMP, E-commerce e SEO Local</h2>
+      <div class="bloco oque">
+        <span class="tag">O que é</span>
+        <p>Três frentes práticas da apostila:</p>
+        <div class="mini-grid">
+          <div class="mini"><strong>📱 Mobile &amp; AMP</strong><small>Design responsivo, botões táteis e texto escaneável. AMP entrega páginas ultraleves em cache.</small></div>
+          <div class="mini"><strong>🛒 E-commerce (12 itens)</strong><small>Palavras de compra, descrições únicas, avaliações, velocidade, Google Shopping e páginas de promoção.</small></div>
+          <div class="mini"><strong>📍 Local &amp; GMN (5 + 8)</strong><small>Termos geográficos, ficha verificada no Google Meu Negócio, fotos com geotag, posts e respostas.</small></div>
+        </div>
+      </div>
+      <div class="bloco porque">
+        <span class="tag">Por que importa</span>
+        <p>O Google prioriza a versão mobile, lojas virtuais sofrem com conteúdo duplicado de fabricantes e negócios locais dependem do mapa e das avaliações para atrair clientes próximos.</p>
+      </div>
+      <div class="bloco exemplo">
+        <span class="tag">Exemplo rápido</span>
+        <p><strong>E-commerce:</strong> descrição própria do produto + estrelas de clientes + checkout rápido no celular.<br>
+        <strong>Local:</strong> ficha do Google Meu Negócio verificada, horário atualizado, fotos com localização e todas as avaliações respondidas.</p>
+      </div>
+      <div class="links-row">
+        <a href="lab.html#lab07" class="link-lab">🧪 Lab 07 (Funil E-commerce)</a>
+        <a href="lab.html#lab08" class="link-lab">🧪 Lab 08 (Google Meu Negócio)</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- ABA 8 — MÉTRICAS -->
+  <div id="aba-metricas" class="tab-content">
+    <section class="card">
+      <h2>📈 Métricas Avançadas de SEO</h2>
+      <div class="bloco oque">
+        <span class="tag">O que é</span>
+        <p>Indicadores que vão além de tráfego bruto e posição. A apostila lista <strong>10 métricas</strong>: <strong>CTR</strong>, <strong>Taxa de Rejeição</strong>, <strong>Tempo na Página</strong>, <strong>Conversão Orgânica</strong>, <strong>Rastreamento</strong>, <strong>Long-Tail</strong>, <strong>Indexação</strong>, <strong>Duração da Sessão</strong>, <strong>Retenção de Palavras</strong> e <strong>Cliques Posicionados</strong>.</p>
+      </div>
+      <div class="bloco porque">
+        <span class="tag">Por que importa</span>
+        <p>O sucesso do SEO não se resume a ficar em 1º lugar — importa se o usuário <strong>clica (CTR)</strong>, <strong>fica na página</strong> e <strong>converte</strong> em cliente ou contato.</p>
+      </div>
+      <div class="bloco exemplo">
+        <span class="tag">Exemplo rápido</span>
+        <p><strong>CTR:</strong> 1.000 impressões e 40 cliques = 4%.<br>
+        <strong>Diagnóstico:</strong> se o CTR sobe e a taxa de rejeição cai de 78% para 45%, título e conteúdo estão alinhados com o que o visitante busca.</p>
+      </div>
+      <div class="links-row">
+        <a href="lab.html#lab04" class="link-lab">🧪 Praticar no Lab 04 (Painel de Métricas)</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- CTA FINAL -->
+  <div class="footer-card">
+    <h4>🚀 Pronto para praticar e testar?</h4>
+    <p>Você já viu o essencial do Tema 03. Agora faça os laboratórios interativos ou avance para o desafio de 20 questões.</p>
+    <div class="footer-acoes">
+      <a href="atividades.html" target="_blank">🎮 Abrir Desafio (20 Questões)</a>
+      <a href="lab.html" target="_blank" class="sec">💻 Abrir Laboratórios Práticos</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function ativarAba(id){
+  var btn = document.querySelector('.tab-btn[data-aba="' + id + '"]');
+  var alvo = document.getElementById(id);
+  if(!btn || !alvo) return;
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.tab-content').forEach(function(c){ c.classList.remove('active'); });
+  btn.classList.add('active');
+  alvo.classList.add('active');
+}
+
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    ativarAba(btn.dataset.aba);
+    if(history.replaceState){ history.replaceState(null, '', '#' + btn.dataset.aba); }
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+window.addEventListener('DOMContentLoaded', function(){
+  if(window.location.hash){ ativarAba(window.location.hash.substring(1)); }
+});
+</script>
+</body>
+</html>

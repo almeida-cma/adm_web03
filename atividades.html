@@ -84,15 +84,14 @@ code{background:#090e17;color:#38bdf8;padding:3px 8px;border-radius:6px;font-fam
 .code-line:hover{background:#162032;}
 .code-line.selected-err{background:var(--no-bg);border-left:5px solid var(--no);color:#fee2e2;}
 .line-no{color:#64748b;user-select:none;width:20px;text-align:right;flex-shrink:0;}
-.evolution-hotspot{background:#070c18;border:2px solid var(--border);border-radius:12px;padding:20px;margin:16px 0;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-.evo-card{background:#111827;border:2px solid #1f2937;border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;transition:var(--trans);}
-.evo-card:hover{border-color:var(--primary);transform:translateY(-2px);}
-.evo-card.picked{border-color:#facc15;box-shadow:0 0 14px rgba(250,204,21,0.6);}
-.evo-card.picked.ok{border-color:var(--ok);box-shadow:0 0 14px rgba(16,185,129,0.6);}
-.evo-card.picked.no{border-color:var(--no);box-shadow:0 0 14px rgba(239,68,68,0.6);}
-.evo-card .emoji{font-size:1.7rem;display:block;margin-bottom:4px;}
-.evo-card .titulo{font-size:0.82rem;font-weight:800;color:#fff;display:block;}
-.evo-card .periodo{font-size:0.7rem;color:#94a3b8;margin-top:2px;display:block;}
+.hotspot-grid{background:#070c18;border:2px solid var(--border);border-radius:12px;padding:20px;margin:16px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;}
+.hot-card{background:#111827;border:2px solid #1f2937;border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;transition:var(--trans);}
+.hot-card:hover{border-color:var(--primary);transform:translateY(-2px);}
+.hot-card.picked{border-color:#facc15;box-shadow:0 0 14px rgba(250,204,21,0.6);}
+.hot-card.picked.ok{border-color:var(--ok);box-shadow:0 0 14px rgba(16,185,129,0.6);}
+.hot-card.picked.no{border-color:var(--no);box-shadow:0 0 14px rgba(239,68,68,0.6);}
+.hot-card .emoji{font-size:1.7rem;display:block;margin-bottom:4px;}
+.hot-card .titulo{font-size:0.82rem;font-weight:800;color:#fff;display:block;}
 .feedback-box{display:none;border-radius:10px;padding:16px 20px;margin-top:18px;font-size:0.92rem;line-height:1.6;}
 .feedback-box.show{display:block;animation:fadeIn 0.2s ease-out;}
 .feedback-box.ok{background:var(--ok-bg);border-left:5px solid var(--ok);color:var(--ok-text);}
@@ -115,7 +114,7 @@ select.gap-select option{background:#0d1524;color:#f8fafc;}
   .match-grid,.buckets-container{grid-template-columns:1fr;}
   .hud-top{flex-direction:column;align-items:flex-start;}
   .question-card{padding:20px 14px;}
-  .evolution-hotspot{grid-template-columns:repeat(2,1fr);}
+  .hotspot-grid{grid-template-columns:repeat(2,1fr);}
 }
 </style>
 </head>
@@ -166,177 +165,188 @@ select.gap-select option{background:#0d1524;color:#f8fafc;}
 <script>
 var DATABASE = [
   { id:1, type:"choice", badge:"1. Múltipla Escolha • On-Page",
-    title:"Segundo a apostila, quantas técnicas de otimização on-page avançada são listadas?",
+    title:"O que são técnicas de otimização on-page avançada e como elas diferem das técnicas básicas de SEO?",
     options:[
-      { t:"5 técnicas", ok:false },
-      { t:"7 técnicas", ok:false },
-      { t:"10 técnicas", ok:true },
-      { t:"15 técnicas", ok:false }
+      { t:"São técnicas que otimizam elementos DENTRO do próprio site, mas de forma mais sofisticada: títulos únicos, ALT descritivo, dados estruturados, páginas segmentadas e mobile-first.", ok:true },
+      { t:"São técnicas que substituem completamente o SEO tradicional.", ok:false },
+      { t:"São apenas técnicas externas de link building.", ok:false },
+      { t:"São práticas exclusivas para lojas virtuais.", ok:false }
     ],
-    exp:"A apostila lista 10: título e meta, palavras-chave, imagens/ALT, URL amigável, dados estruturados, páginas segmentadas, velocidade, conteúdo interativo, testes A/B e mobile-first."
+    exp:"A apostila define que o on-page otimiza elementos dentro do próprio site, mas no nível avançado vai além do básico."
   },
-  { id:2, type:"tf", badge:"2. Verdadeiro ou Falso • Link Building",
-    title:"Segundo a apostila, no link building estratégico a quantidade de links é mais importante que a qualidade e a relevância.",
-    ok:false,
-    exp:"Falso! A apostila é explícita: 'qualidade sobre quantidade' — priorize backlinks de sites relevantes ao nicho e com boa autoridade de domínio."
+  { id:2, type:"tf", badge:"2. Verdadeiro ou Falso • Pesquisa por Voz",
+    title:"Segundo a apostila, a otimização para pesquisa por voz usa consultas mais naturais e coloquiais (perguntas completas), exigindo respostas diretas e formato de P&R.",
+    ok:true,
+    exp:"Verdadeiro! As pessoas falam com assistentes usando perguntas completas, por isso respostas diretas e linguagem natural funcionam melhor."
   },
-  { id:3, type:"multi", badge:"3. Múltiplas Respostas • SEO Técnico",
-    title:"Quais são pilares do SEO TÉCNICO listados na apostila? (Selecione todos)",
+  { id:3, type:"multi", badge:"3. Múltiplas Respostas • Dados Estruturados",
+    title:"Quais são os benefícios da utilização de dados estruturados e marcação Schema listados pela apostila? (Selecione todos)",
     options:[
-      { t:"Redirecionamentos 301/302 e URLs amigáveis", ok:true },
-      { t:"Canônicos e robots.txt", ok:true },
-      { t:"Compra de backlinks em massa", ok:false },
-      { t:"Segurança e HTTPS", ok:true }
+      { t:"Enriquecimento dos resultados de busca (preços, avaliações, horários)", ok:true },
+      { t:"Experiência do usuário aprimorada e maior confiança", ok:true },
+      { t:"Compatibilidade e leitura precisa por assistentes de voz", ok:true },
+      { t:"Redução proposital do tráfego orgânico", ok:false },
+      { t:"Eliminação total da necessidade de conteúdo escrito", ok:false }
     ],
-    exp:"A apostila lista 5 pilares do técnico: URL/redirecionamentos, indexação/sitemap, canônicos/paginação, robots.txt e HTTPS. Compra de backlinks é tática proibida em link building, não em técnico."
+    exp:"A apostila destaca exatamente esses três benefícios: resultados enriquecidos (rich snippets), melhor experiência/CTR e compatibilidade com voz."
   },
-  { id:4, type:"typed", badge:"4. Resposta Digitada • Schema",
-    title:"A apostila cita uma linguagem de marcação padrão que ajuda a definir e categorizar elementos do site. Qual é o nome dessa linguagem?",
-    sub:"Digite apenas o nome (sem .org):",
+  { id:4, type:"typed", badge:"4. Resposta Digitada • Marcação",
+    title:"Qual é o nome da linguagem de marcação padrão usada para categorizar elementos do site e gerar rich snippets nos buscadores?",
+    sub:"Digite apenas o nome principal (ex: schema):",
     answer:"schema",
-    exp:"A apostila diz: 'O Schema.org é uma linguagem de marcação padrão que ajuda a definir e categorizar diferentes elementos do seu site.'"
+    exp:"É o Schema (Schema.org), normalmente implementado em JSON-LD para enriquecer os resultados de pesquisa."
   },
-  { id:5, type:"number", badge:"5. Resposta Numérica • Métricas",
-    title:"Segundo a apostila, quantas MÉTRICAS AVANÇADAS DE SEO são listadas?",
+  { id:5, type:"number", badge:"5. Resposta Numérica • Schema",
+    title:"Segundo a apostila, quantos tipos comuns de marcação Schema são listados (Artigo, Receita, Evento, Produto, Avaliação)?",
     sub:"Informe apenas o número:",
-    answer:10,
-    exp:"São 10: CTR, taxa de rejeição, tempo médio, conversão orgânica, taxa de rastreamento, long-tail, taxa de indexação, duração de sessão, retenção de palavras-chave e cliques posicionados."
+    answer:5,
+    exp:"São 5 tipos comuns listados pela apostila: Artigo, Receita, Evento, Produto e Avaliação."
   },
-  { id:6, type:"sort", badge:"6. Ordenação • Métricas",
-    title:"Ordene as métricas do MENOR escopo para o MAIOR escopo de análise:",
+  { id:6, type:"sort", badge:"6. Ordenação • Jornada do E-commerce",
+    title:"Ordene as 5 etapas da jornada orgânica em um e-commerce otimizado para SEO, da busca até a venda:",
     items:[
-      "CTR (uma impressão/resultado específico)",
-      "Tempo Médio na Página (uma página)",
-      "Duração da Sessão (visita completa)",
-      "Conversão Orgânica (jornada até a ação final)"
+      "Pesquisa de palavra-chave de compra no Google",
+      "Impressão com Rich Snippet e clique na SERP (CTR)",
+      "Visualização da página de produto com descrição única",
+      "Adição ao carrinho em layout mobile-first rápido",
+      "Finalização da compra (conversão orgânica)"
     ],
-    correctOrder:[0,1,2,3],
-    exp:"A apostila ordena do mais granular (CTR) ao mais amplo (conversão), passando por tempo na página e duração da sessão."
+    correctOrder:[0,1,2,3,4],
+    exp:"O fluxo começa na busca e clique (CTR), passa pela página otimizada do produto e carrinho rápido até a conversão orgânica."
   },
   { id:7, type:"match", badge:"7. Associação • Link Building",
-    title:"Associe cada abordagem de link building à sua descrição, conforme a apostila:",
+    title:"Associe cada abordagem de Link Building estratégico à sua descrição, conforme a apostila:",
     pairs:[
-      { left:"Guest Posting", right:"Contribuir com conteúdo em sites de terceiros" },
-      { left:"Outreach Personalizado", right:"Contato direto para solicitar backlinks" },
-      { left:"Participação em Comunidades", right:"Engajar-se em fóruns e grupos para relacionamentos" }
+      { left:"Guest Posting", right:"Contribuir com conteúdo valioso em sites de terceiros" },
+      { left:"Outreach Personalizado", right:"Contato direto com donos de sites relevantes para pedir links" },
+      { left:"Baseado em Conteúdo", right:"Criar material excepcional que atrai backlinks naturalmente" },
+      { left:"Comunidades", right:"Participar de fóruns e grupos construindo relacionamentos" }
     ],
-    exp:"A apostila lista essas 3 abordagens + o link building baseado em conteúdo excepcional."
+    exp:"Essas são as 4 abordagens éticas listadas pela apostila para construir backlinks de qualidade."
   },
-  { id:8, type:"buckets", badge:"8. Classificação • Link Building",
-    title:"Classifique as táticas como ÉTICA ou NÃO ÉTICA em link building, conforme a apostila:",
-    buckets:["Tática Ética","Tática Não Ética"],
+  { id:8, type:"buckets", badge:"8. Classificação • SEO Técnico e Velocidade",
+    title:"Classifique cada prática entre INFRAESTRUTURA (SEO Técnico) ou VELOCIDADE DE PÁGINA:",
+    buckets:["SEO Técnico (Infraestrutura)","Velocidade de Página"],
     items:[
-      { text:"Guest posting em sites de nicho", b:0 },
-      { text:"Compra de backlinks", b:1 },
-      { text:"Criar conteúdo excepcional que atrai backlinks", b:0 },
-      { text:"Troca excessiva de links", b:1 }
+      { text:"Enviar Sitemap XML e ajustar robots.txt", b:0 },
+      { text:"Usar tags canônicas e HTTPS", b:0 },
+      { text:"Ativar compactação GZIP e cache do navegador", b:1 },
+      { text:"Comprimir imagens e usar carregamento assíncrono", b:1 }
     ],
-    exp:"A apostila avisa: 'Comprar backlinks pode resultar em penalizações' e 'o foco deve estar na obtenção de backlinks naturais e orgânicos, em vez de trocas excessivas'."
+    exp:"Sitemap, robots.txt, canônicas e HTTPS pertencem à infraestrutura técnica; compressão, GZIP, cache e scripts assíncronos aceleram o carregamento."
   },
-  { id:9, type:"gap", badge:"9. Completar Lacunas • AMP",
-    title:"Complete a afirmativa sobre AMP com a palavra correta:",
-    snippet:'As páginas AMP são pré-armazenadas em <b>_____1_____</b> por provedores de conteúdo, resultando em carregamento instantâneo.',
-    options:["cache","backup","servidor local","CDN externa"],
-    correct:"cache",
-    exp:"A apostila diz: 'as páginas AMP são pré-armazenadas em cache por provedores de conteúdo, resultando em carregamento instantâneo ao serem acessadas'."
+  { id:9, type:"gap", badge:"9. Completar Lacunas • Backlinks",
+    title:"Complete a recomendação da apostila sobre Link Building:",
+    snippet:'Na estratégia de backlinks, deve-se priorizar <b>_____1_____</b>, pois comprar links pode causar penalizações.',
+    options:["qualidade e relevância","quantidade massiva","troca excessiva","links ocultos"],
+    correct:"qualidade e relevância",
+    exp:"A apostila reforça: priorize backlinks de sites relevantes ao nicho e com boa autoridade de domínio."
   },
   { id:10, type:"hotspot", badge:"10. Hotspot • Tipos de Schema",
-    title:"Clique no tipo de marcação Schema que a apostila associa a PREÇOS e AVALIAÇÕES de itens vendidos:",
+    title:"Clique no tipo de marcação Schema ideal para exibir preço, disponibilidade e avaliações de um item à venda:",
     target:"produto",
-    exp:"A apostila: 'Produto: para exibir detalhes de produtos, incluindo preços e avaliações.'"
+    cards:[
+      { key:"artigo", emoji:"📰", title:"Artigo" },
+      { key:"receita", emoji:"🍰", title:"Receita" },
+      { key:"evento", emoji:"🎫", title:"Evento" },
+      { key:"produto", emoji:"🛒", title:"Produto" },
+      { key:"avaliacao", emoji:"⭐", title:"Avaliação" }
+    ],
+    exp:"O Schema de Produto (Product) detalha nome, preço, disponibilidade em estoque e avaliações agregadas."
   },
-  { id:11, type:"errorcode", badge:"11. Caça ao Erro • SEO Técnico",
-    title:"Clique na linha com afirmação ERRADA sobre SEO técnico:",
+  { id:11, type:"errorcode", badge:"11. Caça ao Erro • Link Building",
+    title:"Clique na linha com afirmação ERRADA sobre Link Building estratégico:",
     lines:[
-      "Robots.txt controla quais partes do site podem ser rastreadas.",
-      "Tags canônicas evitam conteúdo duplicado.",
-      "Comprimir imagens agrava o tempo de carregamento.",
-      "Redirecionamentos 301 e 302 tratam URLs antigas ou quebradas."
+      "Analisar backlinks dos concorrentes ajuda a identificar oportunidades.",
+      "Monitorar menções da marca permite solicitar a inclusão do link.",
+      "Comprar backlinks em massa garante o topo do Google sem risco de penalização.",
+      "Conteúdo excepcional atrai backlinks naturais e melhora a autoridade."
     ],
     errLine:2,
-    exp:"A apostila diz o oposto: comprimir imagens REDUZ o tempo de carregamento. É uma das principais técnicas de otimização de velocidade."
+    exp:"A apostila alerta explicitamente que comprar backlinks ou fazer troca excessiva é antiético e pode resultar em penalizações."
   },
-  { id:12, type:"choice", badge:"12. Múltipla Escolha • Pesquisa de Voz",
-    title:"Segundo a apostila, qual é a característica principal das consultas em pesquisa por voz?",
+  { id:12, type:"choice", badge:"12. Múltipla Escolha • SEO Técnico",
+    title:"Segundo a apostila, qual é a função principal das tags canônicas no SEO técnico?",
     options:[
-      { t:"São curtas e técnicas.", ok:false },
-      { t:"São naturais e coloquiais, como se estivessem falando com outra pessoa.", ok:true },
-      { t:"Usam sempre uma única palavra.", ok:false },
-      { t:"Não usam palavras-chave.", ok:false }
+      { t:"Ativar o certificado HTTPS no servidor.", ok:false },
+      { t:"Evitar conteúdo duplicado, indicando qual versão da página é a principal.", ok:true },
+      { t:"Bloquear todo o rastreamento do Google.", ok:false },
+      { t:"Substituir o arquivo sitemap.xml.", ok:false }
     ],
-    exp:"A apostila: 'a pesquisa por voz é caracterizada por consultas mais naturais e coloquiais. As pessoas tendem a fazer perguntas completas.'"
+    exp:"Tags canônicas evitam problemas de conteúdo duplicado apontando a URL oficial para os mecanismos de busca."
   },
-  { id:13, type:"choice", badge:"13. Múltipla Escolha • E-commerce",
-    title:"Qual das opções abaixo NÃO é uma prática recomendada de SEO para e-commerce, segundo a apostila?",
+  { id:13, type:"multi", badge:"13. Múltiplas Respostas • Mobile e AMP",
+    title:"Quais pontos fazem parte da otimização para Dispositivos Móveis e páginas AMP na apostila? (Selecione todos)",
     options:[
-      { t:"Criar descrições únicas para cada produto.", ok:false },
-      { t:"Incentivar avaliações de clientes.", ok:false },
-      { t:"Repetir a mesma descrição em todos os produtos para economizar tempo.", ok:true },
-      { t:"Listar produtos no Google Shopping.", ok:false }
+      { t:"Design responsivo e botões facilmente clicáveis ao toque", ok:true },
+      { t:"Textos escaneáveis adaptados a telas menores", ok:true },
+      { t:"AMP com recursos limitados e pré-armazenamento em cache para carregamento rápido", ok:true },
+      { t:"Blocos enormes de texto sem quebras para aumentar o tempo na página", ok:false }
     ],
-    exp:"A apostila diz explicitamente: 'crie descrições únicas e atraentes para cada produto, evitando conteúdo duplicado.' Repetir descrições é prejudicial."
+    exp:"Mobile exige responsividade, toque fácil e leitura escaneável; AMP restringe scripts pesados e usa cache."
   },
   { id:14, type:"number", badge:"14. Resposta Numérica • Google Meu Negócio",
-    title:"Segundo a apostila, quantos recursos do Google Meu Negócio são listados?",
+    title:"Segundo a apostila, quantos recursos do Google Meu Negócio são listados para fortalecer o SEO local?",
     sub:"Informe apenas o número:",
     answer:8,
-    exp:"São 8: reivindicação/verificação, informações detalhadas, fotos de qualidade, avaliações e respostas, publicações, insights, geotagging de fotos e recursos adicionais (mensagens, reservas)."
+    exp:"São 8 recursos: reivindicação, informações detalhadas, fotos, avaliações, publicações, insights, geotagging e recursos adicionais."
   },
-  { id:15, type:"tf", badge:"15. Verdadeiro ou Falso • E-commerce",
-    title:"Segundo a apostila, incluir palavras-chave nas URLs de produtos é uma boa prática de SEO para e-commerce.",
+  { id:15, type:"tf", badge:"15. Verdadeiro ou Falso • Palavras-Chave",
+    title:"Na pesquisa de palavras-chave avançada, termos de cauda longa (long-tail) têm menor concorrência e podem converter muito bem por serem altamente relevantes.",
     ok:true,
-    exp:"Verdadeiro! A apostila lista como ponto 9 do SEO para e-commerce: 'inclua palavras-chave relevantes nas URLs de produtos para melhorar a visibilidade'."
+    exp:"Verdadeiro! Embora tenham menos volume de busca, palavras long-tail atingem usuários com intenção muito mais específica."
   },
-  { id:16, type:"choice", badge:"16. Múltipla Escolha • On-Page",
-    title:"Segundo a apostila, o que os dados estruturados e Schema permitem exibir diretamente nos resultados de busca?",
+  { id:16, type:"choice", badge:"16. Múltipla Escolha • E-commerce",
+    title:"Quais estratégias específicas fortalecem o SEO para E-commerce segundo a apostila?",
     options:[
-      { t:"Somente o título e a URL.", ok:false },
-      { t:"Informações enriquecidas como avaliações, preços, horários e resumos de conteúdo.", ok:true },
-      { t:"Apenas imagens.", ok:false },
-      { t:"Nenhuma informação extra.", ok:false }
+      { t:"Copiar a descrição padrão do fabricante em todas as páginas.", ok:false },
+      { t:"Usar termos de compra, descrições únicas, URLs amigáveis, avaliações de clientes, Google Shopping e loja responsiva.", ok:true },
+      { t:"Ignorar a velocidade das imagens para manter resolução máxima.", ok:false },
+      { t:"Remover páginas de promoções e produtos relacionados.", ok:false }
     ],
-    exp:"A apostila: 'Os dados estruturados permitem que informações como avaliações, preços, horários de funcionamento e resumos de conteúdo sejam exibidas diretamente nos resultados de pesquisa.'"
+    exp:"A apostila lista 12 pontos para e-commerce, destacando descrições únicas, avaliações, imagens comprimidas e mobile."
   },
-  { id:17, type:"match", badge:"17. Associação • Pesquisa de Palavras-Chave",
-    title:"Associe cada ferramenta citada pela apostila ao seu uso:",
+  { id:17, type:"match", badge:"17. Associação • Métricas Avançadas",
+    title:"Associe cada métrica avançada de SEO à sua definição:",
     pairs:[
-      { left:"Google Keyword Planner", right:"Explorar volume de busca e tendências" },
-      { left:"SEMrush", right:"Análise de concorrência e palavras-chave" },
-      { left:"Ahrefs", right:"Backlinks e autoridade de domínio" }
+      { left:"CTR (Taxa de Cliques)", right:"Proporção de cliques em relação às impressões na busca" },
+      { left:"Taxa de Rejeição", right:"Porcentagem de visitantes que saem após ver só uma página" },
+      { left:"Taxa de Rastreamento", right:"Quantas páginas do site foram rastreadas pelos buscadores" },
+      { left:"Conversão Orgânica", right:"Visitantes de busca que realizam uma ação desejada" }
     ],
-    exp:"A apostila: 'Utilize ferramentas avançadas de pesquisa de palavras-chave, como o Google Keyword Planner, SEMrush, Ahrefs e Moz Keyword Explorer.'"
+    exp:"Cada métrica mede um ponto específico: atratividade (CTR), aderência (rejeição), saúde técnica (rastreamento) e resultado (conversão)."
   },
-  { id:18, type:"buckets", badge:"18. Classificação • Métricas de SEO",
-    title:"Classifique cada métrica como sendo de ENGAJAMENTO ou de DESCOBERTA (indexação/rastreamento):",
-    buckets:["Engajamento","Descoberta/Indexação"],
+  { id:18, type:"buckets", badge:"18. Classificação • On-Page vs SEO Local",
+    title:"Classifique cada ação entre OTIMIZAÇÃO ON-PAGE ou SEO LOCAL / GOOGLE MEU NEGÓCIO:",
+    buckets:["On-Page","SEO Local / GMN"],
     items:[
-      { text:"Tempo Médio na Página", b:0 },
-      { text:"Taxa de Rejeição", b:0 },
-      { text:"Taxa de Rastreamento", b:1 },
-      { text:"Taxa de Indexação", b:1 }
+      { text:"Otimizar atributos ALT e títulos exclusivos", b:0 },
+      { text:"Realizar testes A/B em CTAs e layouts", b:0 },
+      { text:"Reivindicar ficha e responder avaliações de clientes", b:1 },
+      { text:"Aplicar geotagging em fotos e páginas por filial", b:1 }
     ],
-    exp:"Tempo na página e taxa de rejeição medem engajamento do usuário. Rastreamento e indexação medem se o Google está vendo o conteúdo."
+    exp:"ALT, títulos exclusivos e testes A/B são On-Page; ficha verificada, avaliações locais e geotagging pertencem ao SEO Local / GMN."
   },
-  { id:19, type:"errorcode", badge:"19. Caça ao Erro • AMP",
-    title:"Clique na linha com afirmação ERRADA sobre AMP:",
+  { id:19, type:"errorcode", badge:"19. Caça ao Erro • Pesquisa por Voz",
+    title:"Clique na linha com afirmação ERRADA sobre otimização para pesquisa por voz:",
     lines:[
-      "Páginas AMP são otimizadas para carregamento ultrarrápido em dispositivos móveis.",
-      "AMP permite qualquer script e recurso externo, como um site normal.",
-      "AMP restringe o uso de scripts e recursos externos, focando em conteúdo básico.",
-      "AMP pode ser usada com marcação Schema para enriquecer resultados."
+      "Compreender a intenção por trás da pergunta do usuário é essencial.",
+      "Estruturar conteúdos em Perguntas e Respostas ajuda assistentes virtuais.",
+      "Deve-se evitar linguagem coloquial e usar apenas palavras-chave secas e isoladas.",
+      "Snippets em destaque têm maior chance de serem lidos em voz alta."
     ],
-    errLine:1,
-    exp:"A apostila diz o oposto: 'o AMP restringe o uso de scripts e recursos externos, focando em oferecer um conteúdo básico e rápido'."
+    errLine:2,
+    exp:"A pesquisa por voz exige justamente linguagem natural, coloquial e perguntas completas — não termos secos e isolados."
   },
-  { id:20, type:"choice", badge:"20. Múltipla Escolha • Síntese",
-    title:"Segundo a apostila, qual é a conclusão sobre o sucesso em SEO?",
+  { id:20, type:"choice", badge:"20. Múltipla Escolha • Conclusão",
+    title:"Qual é a conclusão da apostila sobre as Métricas Avançadas e o sucesso do SEO?",
     options:[
-      { t:"Basta classificar bem em palavras-chave.", ok:false },
-      { t:"O sucesso do SEO não se resume a rankings — envolve também engajamento do usuário e conversão em clientes.", ok:true },
-      { t:"Depende apenas de link building.", ok:false },
-      { t:"Só funciona com anúncios pagos.", ok:false }
+      { t:"O único indicador que importa é a posição da palavra-chave principal.", ok:false },
+      { t:"O sucesso do SEO envolve não só classificações, mas também engajamento do usuário e conversão de visitantes em clientes.", ok:true },
+      { t:"Métricas avançadas só se aplicam a grandes portais de notícias.", ok:false },
+      { t:"Após configurar o site uma vez, não é necessário monitorar métricas.", ok:false }
     ],
-    exp:"A apostila: 'o sucesso do SEO não se resume apenas a classificações de palavras-chave, mas também ao engajamento do usuário e à conversão de visitantes em clientes'."
+    exp:"A apostila conclui que rankear sem engajar nem converter não basta: o foco final é a experiência e a conversão."
   }
 ];
 
@@ -410,41 +420,42 @@ function renderAllQuestions() {
     } else if(q.type === 'typed' || q.type === 'number'){
       bodyHTML = '<div class="input-answer-box">' +
         '<input type="text" class="custom-input" id="input-' + idx + '" ' +
-        'placeholder="' + (q.type === 'number' ? 'Ex: 10' : 'Digite a palavra...') + '" ' +
+        'placeholder="' + (q.type === 'number' ? 'Ex: 5' : 'Digite a resposta...') + '" ' +
         'autocomplete="off" onkeydown="if(event.key===\'Enter\') checkInput(' + idx + ')">' +
         '<button type="button" class="btn-action" onclick="checkInput(' + idx + ')">Confirmar</button></div>';
     } else if(q.type === 'sort'){
-      var ordemInicial = embaralharOrdemInicial(idx);
+      var ordemInicial = embaralharOrdemInicial(q.items.length);
       bodyHTML = '<div class="sortable-list" id="sort-list-' + idx + '">' +
         ordemInicial.map(function(posOriginal){
           var item = q.items[posOriginal];
           return '<div class="sort-item" data-pos="' + posOriginal + '">' +
-                 '<span>' + item + '</span>' +
+                 '<span>' + escapeHTML(item) + '</span>' +
                  '<div class="sort-actions">' +
-                 '<button type="button" class="btn-sort" data-idx="' + idx + '" data-pos="' + posOriginal + '" data-dir="-1">▲</button>' +
-                 '<button type="button" class="btn-sort" data-idx="' + idx + '" data-pos="' + posOriginal + '" data-dir="1">▼</button>' +
+                 '<button type="button" class="btn-sort" data-idx="' + idx + '" data-dir="-1">▲</button>' +
+                 '<button type="button" class="btn-sort" data-idx="' + idx + '" data-dir="1">▼</button>' +
                  '</div></div>';
         }).join('') +
         '</div><button type="button" class="btn-action" id="btn-sort-' + idx + '" style="margin-top:12px;" onclick="checkSort(' + idx + ')">Verificar Ordem</button>';
     } else if(q.type === 'match'){
+      var rightPairs = shuffle(q.pairs.map(function(p, pIdx){ return { pIdx:pIdx, right:p.right }; }));
       bodyHTML = '<div class="match-grid">' +
         '<div class="match-col" id="match-l-' + idx + '">' +
         q.pairs.map(function(p, pIdx){
           return '<button type="button" class="match-btn" data-type="l" data-idx="' + pIdx + '" onclick="clickMatch(' + idx + ',\'l\',' + pIdx + ')">' + escapeHTML(p.left) + '</button>';
         }).join('') + '</div>' +
         '<div class="match-col" id="match-r-' + idx + '">' +
-        shuffle(q.pairs.slice()).map(function(p, rIdx){
-          return '<button type="button" class="match-btn" data-type="r" data-ridx="' + rIdx + '" data-val="' + escapeHTML(p.right).replace(/'/g, '&#39;') + '" onclick="clickMatch(' + idx + ',\'r\',' + rIdx + ')">' + escapeHTML(p.right) + '</button>';
+        rightPairs.map(function(rp, rIdx){
+          return '<button type="button" class="match-btn" data-type="r" data-ridx="' + rIdx + '" data-pair="' + rp.pIdx + '" onclick="clickMatch(' + idx + ',\'r\',' + rIdx + ')">' + escapeHTML(rp.right) + '</button>';
         }).join('') + '</div></div>';
     } else if(q.type === 'buckets'){
       bodyHTML = '<div class="bucket-pool" id="pool-' + idx + '">' +
         q.items.map(function(it, iIdx){
-          return '<span class="chip-item" id="chip-' + idx + '-' + iIdx + '" onclick="pickChip(event,' + idx + ',' + iIdx + ')">' + it.text + '</span>';
+          return '<span class="chip-item" id="chip-' + idx + '-' + iIdx + '" onclick="pickChip(event,' + idx + ',' + iIdx + ')">' + escapeHTML(it.text) + '</span>';
         }).join('') + '</div>' +
         '<div class="buckets-container" id="buckets-container-' + idx + '">' +
         q.buckets.map(function(bName, bIdx){
           return '<div class="bucket" onclick="placeChip(' + idx + ',' + bIdx + ')">' +
-                 '<div class="bucket-title">📂 ' + bName + ' (clique para colocar)</div>' +
+                 '<div class="bucket-title">📂 ' + escapeHTML(bName) + ' (clique para colocar)</div>' +
                  '<div class="bucket-items" id="b-items-' + idx + '-' + bIdx + '"></div></div>';
         }).join('') +
         '</div><button type="button" class="btn-action" id="btn-buckets-' + idx + '" style="margin-top:12px;" onclick="checkBuckets(' + idx + ')">Conferir Distribuição</button>';
@@ -452,16 +463,15 @@ function renderAllQuestions() {
       bodyHTML = '<div style="background:#070c16;padding:18px;border:2px solid var(--border);border-radius:10px;font-family:monospace;margin:16px 0;font-size:1rem;color:#fff;">' +
         q.snippet.replace('_____1_____', '<select class="gap-select" id="gap-sel-' + idx + '">' +
           '<option value="">-- escolha --</option>' +
-          q.options.map(function(o){ return '<option value="' + o + '">' + o + '</option>'; }).join('') +
+          q.options.map(function(o){ return '<option value="' + escapeHTML(o) + '">' + escapeHTML(o) + '</option>'; }).join('') +
           '</select>') +
         '</div><button type="button" class="btn-action" id="btn-gap-' + idx + '" onclick="checkGap(' + idx + ')">Confirmar Lacuna</button>';
     } else if(q.type === 'hotspot'){
-      bodyHTML = '<div class="evolution-hotspot">' +
-        '<div class="evo-card" onclick="clickHotspot(' + idx + ',\'artigo\',this)"><span class="emoji">📰</span><span class="titulo">Artigo</span><span class="periodo">Notícias</span></div>' +
-        '<div class="evo-card" onclick="clickHotspot(' + idx + ',\'receita\',this)"><span class="emoji">🍰</span><span class="titulo">Receita</span><span class="periodo">Culinária</span></div>' +
-        '<div class="evo-card" onclick="clickHotspot(' + idx + ',\'produto\',this)"><span class="emoji">🛒</span><span class="titulo">Produto</span><span class="periodo">Preços e avaliações</span></div>' +
-        '<div class="evo-card" onclick="clickHotspot(' + idx + ',\'evento\',this)"><span class="emoji">🎫</span><span class="titulo">Evento</span><span class="periodo">Datas e locais</span></div>' +
-        '</div>';
+      bodyHTML = '<div class="hotspot-grid">' +
+        q.cards.map(function(c){
+          return '<div class="hot-card" onclick="clickHotspot(' + idx + ',\'' + c.key + '\',this)">' +
+                 '<span class="emoji">' + c.emoji + '</span><span class="titulo">' + escapeHTML(c.title) + '</span></div>';
+        }).join('') + '</div>';
     } else if(q.type === 'errorcode'){
       bodyHTML = '<div class="code-error-box">' +
         q.lines.map(function(l, lIdx){
@@ -479,8 +489,8 @@ function renderAllQuestions() {
       '<div class="feedback-box" id="fb-' + idx + '"></div>' +
       '<div class="q-footer">' +
         '<button type="button" class="btn-action btn-sec" onclick="showQuestion(Math.max(0,' + (idx - 1) + '))" ' + (idx === 0 ? 'disabled' : '') + '>⬅ Anterior</button>' +
-        '<span style="font-size:0.85rem;color:var(--text-muted);font-weight:800;">' + (idx + 1) + ' / 20</span>' +
-        '<button type="button" class="btn-action" onclick="nextOrFinish(' + idx + ')">' + (idx === 19 ? 'Finalizar Desafio 🏁' : 'Próxima ➡') + '</button>' +
+        '<span style="font-size:0.85rem;color:var(--text-muted);font-weight:800;">' + (idx + 1) + ' / ' + DATABASE.length + '</span>' +
+        '<button type="button" class="btn-action" onclick="nextOrFinish(' + idx + ')">' + (idx === DATABASE.length - 1 ? 'Finalizar Desafio 🏁' : 'Próxima ➡') + '</button>' +
       '</div>';
     viewport.appendChild(card);
   });
@@ -492,8 +502,9 @@ function renderAllQuestions() {
   });
 }
 
-function embaralharOrdemInicial(idx){
-  var arr = [0,1,2,3];
+function embaralharOrdemInicial(len){
+  var arr = [];
+  for(var i = 0; i < len; i++) arr.push(i);
   do {
     arr = shuffle(arr);
   } while (arr.every(function(v, i){ return v === i; }));
@@ -581,7 +592,7 @@ function checkInput(qIdx) {
   input.disabled = true;
   var isOk = false;
   if (q.type === 'number') {
-    var num = parseFloat(raw.replace('px', '').trim());
+    var num = parseFloat(raw);
     isOk = (num === q.answer);
   } else {
     isOk = raw.indexOf(q.answer) !== -1;
@@ -594,7 +605,6 @@ function moveSort(qIdx, btn, dir) {
   if (userAnswers[qIdx]) return;
   var list = document.getElementById('sort-list-' + qIdx);
   var item = btn.closest('.sort-item');
-  var posOriginal = parseInt(item.dataset.pos, 10);
   var items = Array.from(list.children);
   var iIdx = items.indexOf(item);
   var targetIdx = iIdx + dir;
@@ -633,11 +643,9 @@ function clickMatch(qIdx, side, val) {
   }
   if (st.l !== null && st.r !== null) {
     var q = DATABASE[qIdx];
-    var parDireita = q.pairs.find(function(p){ return p.right === st.rText; });
     var elDir = document.querySelector('#match-r-' + qIdx + ' [data-ridx="' + st.r + '"]');
-    var textoDir = elDir ? elDir.dataset.val : '';
-    var parEsq = q.pairs[st.l];
-    var isCorrectPair = parEsq && parEsq.right === textoDir;
+    var pairIdxDir = elDir ? parseInt(elDir.dataset.pair, 10) : -1;
+    var isCorrectPair = (st.l === pairIdxDir);
     if (isCorrectPair) {
       var elEsq = document.querySelector('#match-l-' + qIdx + ' [data-idx="' + st.l + '"]');
       if(elEsq) { elEsq.classList.add('matched'); elEsq.disabled = true; }
@@ -703,11 +711,11 @@ function checkGap(qIdx) {
   registerAnswer(qIdx, isOk, q.exp);
 }
 
-function clickHotspot(qIdx, eraName, el) {
+function clickHotspot(qIdx, keyName, el) {
   if (userAnswers[qIdx] !== undefined) return;
   var q = DATABASE[qIdx];
-  var isOk = (eraName === q.target);
-  document.querySelectorAll('#q-card-' + qIdx + ' .evo-card').forEach(function(c){ c.classList.remove('picked','ok','no'); });
+  var isOk = (keyName === q.target);
+  document.querySelectorAll('#q-card-' + qIdx + ' .hot-card').forEach(function(c){ c.classList.remove('picked','ok','no'); });
   el.classList.add('picked');
   el.classList.add(isOk ? 'ok' : 'no');
   registerAnswer(qIdx, isOk, q.exp);
@@ -747,7 +755,7 @@ function showFinalReport() {
   var badge = document.getElementById('final-feedback-badge');
   if (pct >= 85) { badge.textContent = '🏆 Nível Ouro: Domínio pleno do Tema 03!'; badge.style.color = 'var(--ok)'; }
   else if (pct >= 65) { badge.textContent = '👏 Nível Prata: Bom rendimento! Revise os pontos com erro.'; badge.style.color = 'var(--accent)'; }
-  else { badge.textContent = '📖 Nível Bronze: Recomenda-se refazer a leitura e o quiz.'; badge.style.color = 'var(--no)'; }
+  else { badge.textContent = '📖 Nível Bronze: Recomenda-se reler o Guia Rápido e refazer o desafio.'; badge.style.color = 'var(--no)'; }
   var repText = '====================================================\n';
   repText += 'RELATÓRIO OFICIAL: DESAFIO TEMA 03 (20 QUESTÕES)\n';
   repText += 'Acertos: ' + correctCount + ' de ' + total + ' (' + pct + '%) • Pontuação: ' + score + ' pts\n';

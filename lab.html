@@ -3,463 +3,630 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💻 Laboratórios Práticos • Tema 03</title>
+<title>💻 Laboratórios Práticos • Tema 03 — SEO Avançado</title>
 <style>
-  :root{
-    --bg-body:#090d16; --surface-dark:#111827; --surface-card:#18243c;
-    --surface-hover:#1f293d; --primary:#0284c7; --primary-light:#38bdf8;
-    --accent:#ea580c; --accent-hover:#c2410c; --emerald:#10b981; --purple:#8b5cf6;
-    --text-main:#f8fafc; --text-muted:#cbd5e1;
-    --border-dark:#2a3854; --radius-main:16px; --transicao:all .22s ease;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
-    background:radial-gradient(circle at 10% 12%,#0f2b48 0%,#090d16 65%);
-    color:var(--text-main);min-height:100vh;padding:22px 14px 90px;line-height:1.6;}
-  .container{max-width:1150px;margin:0 auto;}
-  .header{background:linear-gradient(135deg,#0369a1 0%,#0284c7 45%,#0d9488 100%);
-    border-radius:var(--radius-main);padding:34px 22px;margin-bottom:22px;text-align:center;
-    color:#fff;box-shadow:0 12px 35px rgba(2,132,199,.35);}
-  .header h1{font-size:clamp(1.4rem,3.2vw,2.1rem);margin-bottom:8px;letter-spacing:-.5px;
-    display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;}
-  .header h1 span{color:#fed7aa;}
-  .header p{opacity:.95;font-size:1rem;max-width:860px;margin:0 auto;}
-  .badge-group{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;}
-  .badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
-    padding:5px 14px;border-radius:30px;font-size:.74rem;font-weight:700;color:#fff;}
-  .filtro-card{background:var(--surface-dark);border:2px solid var(--border-dark);
-    border-radius:var(--radius-main);padding:14px 18px;margin-bottom:24px;
-    display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
-  .filtro-botoes{display:flex;gap:8px;flex-wrap:wrap;}
-  .btn-filtro{background:#1e293b;color:var(--text-muted);border:1px solid var(--border-dark);
-    padding:8px 16px;border-radius:30px;font-size:.82rem;font-weight:700;cursor:pointer;
-    font-family:inherit;transition:var(--transicao);}
-  .btn-filtro:hover{color:#fff;background:var(--surface-hover);}
-  .btn-filtro.active{background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;
-    border-color:var(--primary-light);box-shadow:0 0 12px rgba(56,189,248,.4);}
-  .lab-card{background:var(--surface-dark);border:2px solid var(--border-dark);
-    border-radius:var(--radius-main);margin-bottom:30px;overflow:hidden;
-    box-shadow:0 10px 30px rgba(0,0,0,.35);transition:var(--transicao);}
-  .lab-card:hover{border-color:#475569;}
-  .lab-card-header{padding:18px 22px;background:#0f172a;border-bottom:1px solid var(--border-dark);}
-  .lab-tag-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
-  .tag-num{background:var(--accent);color:#fff;font-size:.76rem;font-weight:900;
-    padding:3px 10px;border-radius:6px;font-family:monospace;}
-  .tag-categoria{background:rgba(56,189,248,.12);color:var(--primary-light);border:1px solid rgba(56,189,248,.3);
-    font-size:.74rem;font-weight:700;padding:3px 10px;border-radius:6px;}
-  .lab-card-title{font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:4px;}
-  .lab-card-sub{font-size:.88rem;color:var(--text-muted);}
-  .code-wrapper{background:#070b12;border-top:1px solid var(--border-dark);}
-  .code-toolbar{display:flex;justify-content:space-between;align-items:center;
-    background:#0b1120;padding:8px 16px;border-bottom:1px solid #1e293b;flex-wrap:wrap;gap:8px;}
-  .code-abas{display:flex;gap:4px;}
-  .btn-aba{background:transparent;border:none;color:#64748b;padding:6px 12px;
-    font-size:.78rem;font-weight:700;cursor:pointer;border-bottom:2px solid transparent;
-    font-family:inherit;transition:var(--transicao);}
-  .btn-aba:hover{color:#cbd5e1;}
-  .btn-aba.active{color:var(--primary-light);border-bottom-color:var(--primary-light);}
-  .code-actions{display:flex;gap:6px;flex-wrap:wrap;}
-  .code-actions button{border:none;padding:6px 12px;border-radius:6px;cursor:pointer;
-    font-size:.74rem;font-weight:700;transition:var(--transicao);
-    display:inline-flex;align-items:center;gap:4px;font-family:inherit;color:#fff;}
-  .btn-copy{background:var(--emerald);color:#042f2e;}
-  .btn-copy:hover{background:#059669;color:#fff;}
-  .btn-prev{background:var(--purple);}
-  .btn-prev:hover{background:#7c3aed;transform:scale(1.02);}
-  .btn-oc{background:var(--accent);}
-  .btn-oc:hover{background:var(--accent-hover);transform:scale(1.02);}
-  .btn-down{background:var(--primary);}
-  .btn-down:hover{background:#0369a1;transform:scale(1.02);}
-  .code-pane{display:none;padding:16px 18px;color:#e2e8f0;font-family:'Courier New',monospace;
-    font-size:.82rem;line-height:1.65;overflow-x:auto;white-space:pre;max-height:380px;
-    background:#070b12;}
-  .code-pane.active{display:block;}
-  .preview-inline{margin:14px;border:2px solid var(--border-dark);border-radius:12px;
-    overflow:hidden;background:#090d16;}
-  .preview-header{display:flex;justify-content:space-between;align-items:center;
-    padding:8px 14px;background:#0f172a;border-bottom:1px solid #1e293b;
-    color:#cbd5e1;font-size:.78rem;font-weight:700;font-family:monospace;}
-  .preview-close{background:transparent;border:1px solid #334155;color:#f87171;
-    padding:2px 8px;border-radius:5px;cursor:pointer;font-size:.72rem;font-weight:700;}
-  .preview-close:hover{background:#450a0a;}
-  .preview-inline iframe{width:100%;height:400px;border:none;background:#fff;display:block;}
-  .analise-card{background:#0d1627;border-top:2px solid #1e293b;padding:20px 24px;
-    font-size:.9rem;line-height:1.65;color:#f1f5f9;}
-  .analise-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;}
-  .analise-box{background:rgba(255,255,255,.02);border:1px solid var(--border-dark);
-    border-radius:10px;padding:14px 18px;}
-  .analise-box h4{color:var(--primary-light);font-size:.94rem;margin-bottom:8px;}
-  .analise-box p{color:#cbd5e1;font-size:.88rem;margin-bottom:8px;}
-  .analise-box ul{margin-left:18px;color:#cbd5e1;font-size:.87rem;}
-  .analise-box li{margin-bottom:4px;}
-  code{background:#1e293b;color:#38bdf8;padding:2px 6px;border-radius:4px;
-    font-family:'Courier New',monospace;font-size:.88em;font-weight:bold;}
-  .toast{position:fixed;bottom:20px;right:20px;background:var(--emerald);color:#042f2e;
-    padding:12px 20px;border-radius:10px;font-weight:800;font-size:.85rem;
-    box-shadow:0 10px 25px rgba(0,0,0,.4);display:none;z-index:9999;max-width:340px;line-height:1.5;}
-  @media(max-width:768px){
-    .analise-grid{grid-template-columns:1fr;}
-    .code-toolbar{flex-direction:column;align-items:flex-start;}
-  }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  background:linear-gradient(135deg,#090d16 0%,#15254a 50%,#0c4a6e 100%);
+  min-height:100vh;padding:24px 16px 80px;color:#1e293b;}
+.container{max-width:1100px;margin:0 auto;}
+.header{text-align:center;margin-bottom:24px;padding:32px 20px;background:#fff;
+  border-radius:24px;box-shadow:0 20px 60px rgba(0,0,0,.45);}
+.header h1{font-size:1.8rem;color:#0f172a;margin-bottom:8px;}
+.header h1 span{color:#0284c7;}
+.header p{color:#64748b;font-size:.94rem;max-width:760px;margin:0 auto;line-height:1.55;}
+.badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px;}
+.badges span{background:#0284c7;color:#fff;padding:4px 14px;border-radius:30px;
+  font-weight:700;font-size:.72rem;letter-spacing:.5px;}
+.badges span.roxo{background:#7c3aed;}
+.badges span.verde{background:#10b981;}
+.badges span.laranja{background:#ea580c;}
+.filtros{display:flex;gap:6px;overflow-x:auto;padding:8px 4px;margin-bottom:20px;
+  background:#fff;border-radius:16px;box-shadow:0 4px 14px rgba(0,0,0,.1);}
+.filtro-btn{background:#f8fafc;color:#64748b;border:1px solid #cbd5e1;
+  padding:8px 16px;border-radius:30px;font-size:.78rem;font-weight:700;
+  cursor:pointer;white-space:nowrap;transition:.2s;font-family:inherit;}
+.filtro-btn:hover{color:#0284c7;border-color:#0284c7;}
+.filtro-btn.active{background:#0284c7;color:#fff;border-color:#0284c7;}
+.lab{background:#fff;border-radius:20px;padding:28px;margin-bottom:24px;
+  box-shadow:0 10px 30px rgba(0,0,0,.15);scroll-margin-top:20px;}
+.lab-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;
+  padding-bottom:14px;border-bottom:2px solid #f1f5f9;}
+.lab-num{background:#0284c7;color:#fff;padding:4px 12px;border-radius:8px;
+  font-size:.72rem;font-weight:900;letter-spacing:.5px;}
+.lab-num.roxo{background:#7c3aed;}
+.lab-num.verde{background:#10b981;}
+.lab-head h2{font-size:1.3rem;color:#0f172a;flex:1;min-width:200px;}
+.lab-head .categoria{font-size:.68rem;background:#f0f9ff;color:#0284c7;
+  padding:3px 10px;border-radius:20px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;}
+.lab p.desc{color:#64748b;font-size:.9rem;line-height:1.6;margin-bottom:14px;}
+.lab-actions{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.lab-actions button{background:#f8fafc;border:1px solid #cbd5e1;color:#475569;
+  padding:6px 14px;border-radius:6px;font-size:.75rem;font-weight:700;
+  cursor:pointer;font-family:inherit;transition:.2s;}
+.lab-actions button:hover{background:#0284c7;color:#fff;border-color:#0284c7;}
+.code-box{background:#0f172a;border-radius:12px;padding:16px 18px;margin-bottom:14px;
+  overflow-x:auto;max-height:420px;overflow-y:auto;}
+.code-box pre{color:#e2e8f0;font-family:'Courier New',monospace;font-size:.78rem;
+  line-height:1.55;white-space:pre;margin:0;}
+.code-box::-webkit-scrollbar{width:8px;height:8px;}
+.code-box::-webkit-scrollbar-thumb{background:#334155;border-radius:4px;}
+.preview-frame{background:#f8fafc;border:2px dashed #cbd5e1;border-radius:12px;
+  padding:8px;margin-bottom:14px;overflow:hidden;display:none;}
+.preview-frame.show{display:block;}
+.preview-frame iframe{width:100%;min-height:440px;border:none;border-radius:8px;background:#fff;}
+.conceitos{background:#f0f9ff;border-left:5px solid #0284c7;border-radius:10px;
+  padding:14px 18px;font-size:.86rem;color:#334155;line-height:1.7;}
+.conceitos h4{font-size:.78rem;color:#0369a1;text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:8px;font-weight:900;}
+.conceitos ul{padding-left:20px;margin-bottom:8px;}
+.conceitos li{margin-bottom:4px;}
+.conceitos .observar{background:#fff;border-radius:8px;padding:10px 14px;margin-top:10px;
+  border-left:3px solid #10b981;}
+.conceitos .observar h5{font-size:.74rem;color:#15803d;text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:6px;font-weight:900;}
+.projeto-card{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;
+  border-radius:20px;padding:28px;margin-bottom:24px;box-shadow:0 10px 30px rgba(124,58,237,.4);}
+.projeto-card h2{font-size:1.3rem;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.projeto-card p{font-size:.9rem;line-height:1.6;margin-bottom:16px;color:#f3e8ff;}
+.projeto-card .botoes{display:flex;gap:10px;flex-wrap:wrap;}
+.projeto-card .botoes a{display:inline-flex;align-items:center;gap:8px;
+  background:#fff;color:#7c3aed;padding:10px 20px;border-radius:30px;
+  text-decoration:none;font-weight:800;font-size:.86rem;transition:.2s;}
+.projeto-card .botoes a:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.3);}
+.projeto-card .botoes a.sec{background:rgba(255,255,255,.2);color:#fff;
+  border:1px solid rgba(255,255,255,.4);}
+.projeto-card .botoes a.sec:hover{background:rgba(255,255,255,.3);}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);
+  background:#16a34a;color:#fff;padding:12px 24px;border-radius:30px;font-weight:800;
+  font-size:.88rem;box-shadow:0 10px 30px rgba(0,0,0,.4);transition:transform .3s;z-index:999;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+code{background:#e2e8f0;color:#0369a1;padding:2px 6px;border-radius:4px;font-family:'Courier New',monospace;font-size:.88em;font-weight:bold;}
+@media (max-width:720px){
+  .lab{padding:18px 14px;}
+  .lab-head h2{font-size:1.1rem;}
+  .code-box{max-height:360px;}
+  .preview-frame iframe{min-height:480px;}
+}
 </style>
 </head>
 <body>
 <div class="container">
+
   <header class="header">
-    <h1>💻 Laboratórios Práticos &bull; <span>Tema 03 — SEO Avançado</span></h1>
-    <p>8 projetos para materializar os conceitos da apostila: meta tags, SERP com rich snippet, JSON-LD, painel de métricas, URL amigável, pesquisa por voz, funil de e-commerce e Google Meu Negócio.</p>
-    <div class="badge-group">
+    <h1>💻 Laboratórios Práticos <span>• Tema 03</span></h1>
+    <p>SEO Avançado — 8 projetos interativos para materializar os conceitos da apostila: simulador de meta tags, SERP com Rich Snippet, gerador de JSON-LD, painel de métricas, URL amigável, pesquisa por voz, funil de e-commerce e Google Meu Negócio.</p>
+    <div class="badges">
       <span>📝 On-Page</span>
-      <span>📊 Schema</span>
+      <span class="roxo">📊 Schema</span>
       <span>⚙️ Técnico</span>
-      <span>🛒 E-commerce</span>
-      <span>📍 Local</span>
-      <span>📈 Métricas</span>
+      <span class="laranja">🛒 E-commerce</span>
+      <span class="verde">📍 Local</span>
+      <span class="roxo">📈 Métricas</span>
     </div>
   </header>
 
-  <div class="filtro-card">
-    <span style="font-size:.86rem;font-weight:800;color:#94a3b8;">FILTRAR:</span>
-    <div class="filtro-botoes">
-      <button type="button" class="btn-filtro active" data-filtro="todos">🌟 Todos os 8</button>
-      <button type="button" class="btn-filtro" data-filtro="onpage">📝 On-Page</button>
-      <button type="button" class="btn-filtro" data-filtro="schema">📊 Schema</button>
-      <button type="button" class="btn-filtro" data-filtro="tecnico">⚙️ Técnico</button>
-      <button type="button" class="btn-filtro" data-filtro="ecommerce">🛒 E-commerce</button>
-      <button type="button" class="btn-filtro" data-filtro="local">📍 Local</button>
-      <button type="button" class="btn-filtro" data-filtro="metricas">📈 Métricas</button>
-    </div>
-  </div>
+  <nav class="filtros">
+    <button type="button" class="filtro-btn active" data-filtro="todos">🌟 Todos os 8</button>
+    <button type="button" class="filtro-btn" data-filtro="onpage">📝 On-Page</button>
+    <button type="button" class="filtro-btn" data-filtro="schema">📊 Schema</button>
+    <button type="button" class="filtro-btn" data-filtro="tecnico">⚙️ Técnico</button>
+    <button type="button" class="filtro-btn" data-filtro="ecommerce">🛒 E-commerce</button>
+    <button type="button" class="filtro-btn" data-filtro="local">📍 Local</button>
+    <button type="button" class="filtro-btn" data-filtro="metricas">📈 Métricas</button>
+  </nav>
 
-  <main id="container-labs"></main>
+  <main id="labs-container">
+
+    <!-- LAB 01 -->
+    <article class="lab" id="lab01" data-categoria="onpage">
+      <div class="lab-head">
+        <span class="lab-num">LAB 01</span>
+        <h2>Simulador de meta tag — título e meta description com preview</h2>
+        <span class="categoria">On-Page</span>
+      </div>
+      <p class="desc">Aplicação prática do item 1 do On-Page: criar títulos exclusivos e meta descrições envolventes para atrair cliques.</p>
+      <div class="lab-actions">
+        <button type="button" onclick="togglePreview('lab01')">🧪 Preview</button>
+        <button type="button" onclick="copiarLab('lab01')">📋 Copiar</button>
+        <button type="button" onclick="abrirOneCompiler('lab01')">▶️ OneCompiler</button>
+        <button type="button" onclick="baixarLab('lab01')">⬇️ Baixar</button>
+      </div>
+      <div class="code-box" id="code-lab01">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Simulador de meta tag — título e meta description com preview&lt;/title&gt;
+  &lt;style&gt;
+body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;color:#0f172a}h2{font-size:1.1rem;color:#0284c7;margin-bottom:14px}h3{font-size:.95rem;color:#0f172a;margin:16px 0 8px}.form label{display:block;font-size:.82rem;font-weight:700;margin-top:10px;margin-bottom:4px}.form input,.form textarea{width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:6px;font-family:inherit;font-size:.85rem}.form textarea{resize:vertical;min-height:60px;height:60px}.contador{font-size:.7rem;color:#64748b;text-align:right;margin-top:3px}.contador.alerta{color:#dc2626;font-weight:700}.serp{background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:12px 16px;max-width:600px}.serp .url{font-size:.75rem;color:#0f766e;margin-bottom:3px}.serp .titulo{color:#1a0dab;font-size:1rem;font-weight:600;line-height:1.3;margin-bottom:3px}.serp .meta{font-size:.8rem;color:#4d5156;line-height:1.4}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;📝 Simulador de Meta Tags&lt;/h2&gt;&lt;div class="form"&gt;&lt;label&gt;Título:&lt;/label&gt;&lt;input id="inTitulo" value="Guia completo de SEO Avançado 2026"&gt;&lt;div id="cTitulo" class="contador"&gt;0/60&lt;/div&gt;&lt;label&gt;Meta Description:&lt;/label&gt;&lt;textarea id="inMeta"&gt;Aprenda técnicas de otimização on-page, dados estruturados e link building para aumentar a visibilidade do seu site nos mecanismos de busca.&lt;/textarea&gt;&lt;div id="cMeta" class="contador"&gt;0/160&lt;/div&gt;&lt;/div&gt;&lt;h3&gt;Preview na SERP:&lt;/h3&gt;&lt;div class="serp"&gt;&lt;div class="url"&gt;www.seusite.com.br › seo-avancado&lt;/div&gt;&lt;div class="titulo" id="pvtitulo"&gt;Guia completo de SEO Avançado 2026&lt;/div&gt;&lt;div class="meta" id="pvmeta"&gt;&lt;/div&gt;&lt;/div&gt;
+  &lt;script&gt;
+function atualizar(){var t=document.getElementById("inTitulo").value;var m=document.getElementById("inMeta").value;document.getElementById("pvtitulo").textContent=t||"(título)";var metaCurta=m.substring(0,160)+(m.length&gt;160?"...":"");document.getElementById("pvmeta").textContent=metaCurta||"(meta)";var ct=document.getElementById("cTitulo");var cm=document.getElementById("cMeta");ct.textContent=t.length+"/60";cm.textContent=m.length+"/160";ct.classList.toggle("alerta",t.length&gt;60);cm.classList.toggle("alerta",m.length&gt;160);}document.getElementById("inTitulo").addEventListener("input",atualizar);document.getElementById("inMeta").addEventListener("input",atualizar);atualizar();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+      </div>
+      <div class="preview-frame" id="frame-lab01"><iframe title="Preview LAB 01"></iframe></div>
+      <div class="conceitos">
+        <h4>📘 Conceitos Demonstrados</h4>
+        <ul>
+          <li>A apostila recomenda <strong>títulos exclusivos e envolventes</strong>, incluindo variações de palavras-chave e elementos persuasivos.</li>
+          <li>O título deve ter até ~60 caracteres (acima disso o Google corta) e a meta description entre 120 e 160 caracteres.</li>
+          <li>Elementos persuasivos (números, benefícios, ano) aumentam o CTR — uma das 10 métricas avançadas da apostila.</li>
+        </ul>
+        <div class="observar">
+          <h5>🔍 O que Observar no Preview</h5>
+          <ul>
+            <li>Digite no campo <strong>Título</strong> e veja o texto virar prévia de SERP em tempo real.</li>
+            <li>A contagem fica <strong>vermelha</strong> ao passar de 60 (título) ou 160 (meta).</li>
+            <li>Teste palavras como "grátis", "2026" e "guia" para avaliar o apelo visual ao clique.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- LAB 02 -->
+    <article class="lab" id="lab02" data-categoria="schema">
+      <div class="lab-head">
+        <span class="lab-num roxo">LAB 02</span>
+        <h2>SERP com e sem Rich Snippet — comparação lado a lado</h2>
+        <span class="categoria">Schema</span>
+      </div>
+      <p class="desc">Demonstra a diferença visual que os dados estruturados (Schema) fazem nos resultados de busca.</p>
+      <div class="lab-actions">
+        <button type="button" onclick="togglePreview('lab02')">🧪 Preview</button>
+        <button type="button" onclick="copiarLab('lab02')">📋 Copiar</button>
+        <button type="button" onclick="abrirOneCompiler('lab02')">▶️ OneCompiler</button>
+        <button type="button" onclick="baixarLab('lab02')">⬇️ Baixar</button>
+      </div>
+      <div class="code-box" id="code-lab02">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;SERP com e sem Rich Snippet — comparação lado a lado&lt;/title&gt;
+  &lt;style&gt;
+body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;color:#0f172a}h2{font-size:1.1rem;color:#0284c7;margin-bottom:14px}.duas{display:grid;grid-template-columns:1fr 1fr;gap:14px}.col h3{font-size:.85rem;margin-bottom:8px}.serp{background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:12px 16px}.serp.rich{border:2px solid #10b981;background:#f0fdf4}.serp .url{font-size:.72rem;color:#0f766e;margin-bottom:3px}.serp .titulo{color:#1a0dab;font-size:.95rem;font-weight:600;line-height:1.3;margin-bottom:3px}.serp .meta{font-size:.78rem;color:#4d5156;line-height:1.4}.extras{margin-top:6px;font-size:.78rem;color:#4d5156}.estrelas{color:#f59e0b;letter-spacing:-1px}.nota{font-weight:700;color:#0f172a}.reviews{color:#64748b}.preco{color:#059669;font-weight:700}.tag{background:#dcfce7;color:#15803d;padding:1px 6px;border-radius:4px;font-size:.7rem;font-weight:700}@media(max-width:640px){.duas{grid-template-columns:1fr}}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;📊 SERP: com e sem Rich Snippet&lt;/h2&gt;&lt;div class="duas"&gt;&lt;div class="col"&gt;&lt;h3&gt;❌ Sem Schema&lt;/h3&gt;&lt;div class="serp"&gt;&lt;div class="url"&gt;www.loja.com › camisetas › artesanal&lt;/div&gt;&lt;div class="titulo"&gt;Camiseta Artesanal — Loja&lt;/div&gt;&lt;div class="meta"&gt;Camiseta feita à mão em Minas Gerais com algodão orgânico. Frete grátis.&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class="col"&gt;&lt;h3&gt;✅ Com Schema (Rich Snippet)&lt;/h3&gt;&lt;div class="serp rich"&gt;&lt;div class="url"&gt;www.loja.com › camisetas › artesanal&lt;/div&gt;&lt;div class="titulo"&gt;Camiseta Artesanal — Loja&lt;/div&gt;&lt;div class="meta"&gt;Camiseta feita à mão em Minas Gerais com algodão orgânico. Frete grátis.&lt;/div&gt;&lt;div class="extras"&gt;&lt;span class="estrelas"&gt;★★★★★&lt;/span&gt; &lt;span class="nota"&gt;4.8&lt;/span&gt; &lt;span class="reviews"&gt;(127)&lt;/span&gt; • &lt;span class="preco"&gt;R$ 79,90&lt;/span&gt; • &lt;span class="tag"&gt;Em estoque&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+      </div>
+      <div class="preview-frame" id="frame-lab02"><iframe title="Preview LAB 02"></iframe></div>
+      <div class="conceitos">
+        <h4>📘 Conceitos Demonstrados</h4>
+        <ul>
+          <li>Rich snippets são resultados <strong>enriquecidos</strong> exibidos com avaliações, preços e detalhes extras.</li>
+          <li>A apostila destaca que eles se destacam visualmente, atraindo mais cliques e aumentando o CTR.</li>
+          <li>Schema de <strong>Produto</strong> exibe preço e estoque; <strong>Avaliação</strong> exibe estrelas — implementados com <code>application/ld+json</code>.</li>
+        </ul>
+        <div class="observar">
+          <h5>🔍 O que Observar no Preview</h5>
+          <ul>
+            <li>Compare lado a lado: à esquerda um resultado comum; à direita com nota, reviews, preço e estoque.</li>
+            <li>Perceba como as estrelas amarelas e o preço atraem o olhar antes mesmo da descrição.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- LAB 03 -->
+    <article class="lab" id="lab03" data-categoria="schema">
+      <div class="lab-head">
+        <span class="lab-num roxo">LAB 03</span>
+        <h2>Gerador de JSON-LD — marcação Schema interativa</h2>
+        <span class="categoria">Schema</span>
+      </div>
+      <p class="desc">Cria e visualiza código JSON-LD para os 5 tipos comuns de Schema citados na apostila.</p>
+      <div class="lab-actions">
+        <button type="button" onclick="togglePreview('lab03')">🧪 Preview</button>
+        <button type="button" onclick="copiarLab('lab03')">📋 Copiar</button>
+        <button type="button" onclick="abrirOneCompiler('lab03')">▶️ OneCompiler</button>
+        <button type="button" onclick="baixarLab('lab03')">⬇️ Baixar</button>
+      </div>
+      <div class="code-box" id="code-lab03">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Gerador de JSON-LD — marcação Schema interativa&lt;/title&gt;
+  &lt;style&gt;
+body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;color:#0f172a}h2{font-size:1.1rem;color:#0284c7;margin-bottom:14px}h3{font-size:.9rem;color:#0f172a;margin:14px 0 8px}.form{background:#fff;padding:14px;border:1px solid #cbd5e1;border-radius:8px;margin-bottom:12px}.form label{display:block;font-size:.78rem;font-weight:700;margin-top:8px;margin-bottom:3px}.form input,.form select{width:100%;padding:7px 10px;border:1px solid #cbd5e1;border-radius:5px;font-family:inherit;font-size:.82rem}.form label:first-child{margin-top:0}pre{background:#0f172a;color:#38bdf8;padding:14px;border-radius:8px;font-family:"Courier New",monospace;font-size:.78rem;overflow-x:auto;line-height:1.5;white-space:pre-wrap;word-wrap:break-word;min-height:180px}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;📊 Gerador de JSON-LD&lt;/h2&gt;&lt;div class="form"&gt;&lt;label&gt;Tipo de Schema:&lt;/label&gt;&lt;select id="selTipo"&gt;&lt;option value="Product"&gt;🛒 Produto (Product)&lt;/option&gt;&lt;option value="Article"&gt;📰 Artigo (Article)&lt;/option&gt;&lt;option value="Recipe"&gt;🍰 Receita (Recipe)&lt;/option&gt;&lt;option value="Event"&gt;🎫 Evento (Event)&lt;/option&gt;&lt;option value="Review"&gt;⭐ Avaliação (Review)&lt;/option&gt;&lt;/select&gt;&lt;label&gt;Nome:&lt;/label&gt;&lt;input id="inNome" value="Camiseta Artesanal"&gt;&lt;label&gt;Preço (Produto/Evento):&lt;/label&gt;&lt;input id="inPreco" value="79.90"&gt;&lt;label&gt;Nota (Avaliação):&lt;/label&gt;&lt;input id="inNota" value="4.8"&gt;&lt;/div&gt;&lt;h3&gt;Código gerado:&lt;/h3&gt;&lt;pre id="codigo"&gt;&lt;/pre&gt;
+  &lt;script&gt;
+function gerar(){var tipo=document.getElementById("selTipo").value;var nome=document.getElementById("inNome").value;var preco=parseFloat(document.getElementById("inPreco").value)||0;var nota=parseFloat(document.getElementById("inNota").value)||0;var obj={"@context":"https://schema.org","@type":tipo,"name":nome};if(tipo==="Product"){obj.image="https://seusite.com.br/img/produto.jpg";obj.sku="CAM-ART-001";obj.brand={"@type":"Brand","name":"Sua Marca"};obj.offers={"@type":"Offer","url":"https://seusite.com.br/produto","price":preco,"priceCurrency":"BRL","availability":"https://schema.org/InStock","itemCondition":"https://schema.org/NewCondition"};obj.aggregateRating={"@type":"AggregateRating","ratingValue":nota,"reviewCount":127,"bestRating":5,"worstRating":1};}if(tipo==="Recipe"){obj.recipeIngredient=["2 xícaras de farinha","1 colher de sal"];obj.recipeInstructions=["Misture os ingredientes","Asse por 30 minutos"];obj.prepTime="PT15M";obj.cookTime="PT30M";}if(tipo==="Event"){obj.startDate="2026-12-01T19:00:00-03:00";obj.location={"@type":"Place","name":"Centro de Convenções","address":"Juiz de Fora, MG"};obj.offers={"@type":"Offer","price":preco,"priceCurrency":"BRL","availability":"https://schema.org/InStock"};}if(tipo==="Review"){obj.itemReviewed={"@type":"Product","name":nome};obj.reviewRating={"@type":"Rating","ratingValue":nota,"bestRating":5};obj.author={"@type":"Person","name":"Cliente"};}if(tipo==="Article"){obj.author={"@type":"Person","name":"Autor"};obj.datePublished="2026-01-15";obj.headline=nome;}var txt="&lt;"+"script type=\"application/ld+json\"&gt;\n"+JSON.stringify(obj,null,2)+"\n&lt;"+"/script&gt;";document.getElementById("codigo").textContent=txt;}["selTipo","inNome","inPreco","inNota"].forEach(function(id){var el=document.getElementById(id);el.addEventListener("input",gerar);el.addEventListener("change",gerar);});gerar();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+      </div>
+      <div class="preview-frame" id="frame-lab03"><iframe title="Preview LAB 03"></iframe></div>
+      <div class="conceitos">
+        <h4>📘 Conceitos Demonstrados</h4>
+        <ul>
+          <li>A apostila cita 5 tipos comuns de Schema: <strong>Artigo, Receita, Evento, Produto e Avaliação</strong>.</li>
+          <li>No JSON-LD usam-se os nomes oficiais em inglês: <code>Article</code>, <code>Recipe</code>, <code>Event</code>, <code>Product</code> e <code>Review</code>.</li>
+          <li>O Google oferece o <strong>Teste de Dados Estruturados</strong> para validar a marcação antes de publicar.</li>
+        </ul>
+        <div class="observar">
+          <h5>🔍 O que Observar no Preview</h5>
+          <ul>
+            <li>Troque o tipo de Schema e veja a estrutura do JSON-LD mudar automaticamente.</li>
+            <li>Altere nome, preço e nota para acompanhar a atualização em tempo real.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- LAB 04 -->
+    <article class="lab" id="lab04" data-categoria="metricas">
+      <div class="lab-head">
+        <span class="lab-num roxo">LAB 04</span>
+        <h2>Painel de métricas — CTR, Rejeição e Tempo na Página</h2>
+        <span class="categoria">Métricas</span>
+      </div>
+      <p class="desc">Dashboard visual comparando três métricas fundamentais da apostila ao longo de três meses.</p>
+      <div class="lab-actions">
+        <button type="button" onclick="togglePreview('lab04')">🧪 Preview</button>
+        <button type="button" onclick="copiarLab('lab04')">📋 Copiar</button>
+        <button type="button" onclick="abrirOneCompiler('lab04')">▶️ OneCompiler</button>
+        <button type="button" onclick="baixarLab('lab04')">⬇️ Baixar</button>
+      </div>
+      <div class="code-box" id="code-lab04">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Painel de métricas — CTR, Rejeição e Tempo na Página&lt;/title&gt;
+  &lt;style&gt;
+body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;color:#0f172a}h2{font-size:1.1rem;color:#0284c7;margin-bottom:14px}.botoes{display:flex;gap:6px;margin-bottom:14px}.met{background:#1e293b;color:#cbd5e1;border:none;padding:7px 16px;border-radius:20px;font-size:.78rem;font-weight:700;cursor:pointer;transition:.2s}.met:hover{background:#334155}.met.ativo{background:#0284c7;color:#fff}.painel{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}.card-met{background:#fff;border:2px solid #cbd5e1;border-radius:12px;padding:18px;text-align:center}.icon{font-size:1.6rem;margin-bottom:4px}.valor{font-size:1.8rem;font-weight:900;color:#0369a1;margin-bottom:2px}.label{font-size:.74rem;color:#64748b;font-weight:700;text-transform:uppercase}.info{background:#e0f2fe;border-left:4px solid #0284c7;padding:10px 14px;border-radius:6px;font-size:.8rem;color:#0369a1}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;📈 Dashboard de métricas&lt;/h2&gt;&lt;div class="botoes"&gt;&lt;button type="button" class="met ativo" data-mes="jan"&gt;Janeiro&lt;/button&gt;&lt;button type="button" class="met" data-mes="fev"&gt;Fevereiro&lt;/button&gt;&lt;button type="button" class="met" data-mes="mar"&gt;Março&lt;/button&gt;&lt;/div&gt;&lt;div class="painel"&gt;&lt;div class="card-met"&gt;&lt;div class="icon"&gt;🎯&lt;/div&gt;&lt;div class="valor" id="vCTR"&gt;—&lt;/div&gt;&lt;div class="label"&gt;CTR&lt;/div&gt;&lt;/div&gt;&lt;div class="card-met"&gt;&lt;div class="icon"&gt;💔&lt;/div&gt;&lt;div class="valor" id="vRej"&gt;—&lt;/div&gt;&lt;div class="label"&gt;Rejeição&lt;/div&gt;&lt;/div&gt;&lt;div class="card-met"&gt;&lt;div class="icon"&gt;⏱️&lt;/div&gt;&lt;div class="valor" id="vTempo"&gt;—&lt;/div&gt;&lt;div class="label"&gt;Tempo&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class="info" id="infoMes"&gt;Selecione um mês para ver os detalhes.&lt;/div&gt;
+  &lt;script&gt;
+var dados={jan:{ctr:"2.1%",rej:"78%",tempo:"45s",info:"Janeiro: métricas ainda baixas, refletindo a situação antes da otimização."},fev:{ctr:"3.8%",rej:"62%",tempo:"1min10s",info:"Fevereiro: título e meta description foram reescritos e rejeição caiu."},mar:{ctr:"5.2%",rej:"45%",tempo:"2min05s",info:"Março: otimização consolidada — todos os indicadores evoluíram."}};function atualizarMes(mes){var d=dados[mes];if(!d)return;document.getElementById("vCTR").textContent=d.ctr;document.getElementById("vRej").textContent=d.rej;document.getElementById("vTempo").textContent=d.tempo;document.getElementById("infoMes").textContent=d.info;}document.querySelectorAll(".met").forEach(function(b){b.addEventListener("click",function(){document.querySelectorAll(".met").forEach(function(x){x.classList.remove("ativo");});b.classList.add("ativo");atualizarMes(b.dataset.mes);});});atualizarMes("jan");
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+      </div>
+      <div class="preview-frame" id="frame-lab04"><iframe title="Preview LAB 04"></iframe></div>
+      <div class="conceitos">
+        <h4>📘 Conceitos Demonstrados</h4>
+        <ul>
+          <li>Foco em 3 das 10 métricas avançadas da apostila: <strong>CTR, Taxa de Rejeição e Tempo na Página</strong>.</li>
+          <li>CTR alta mostra que título e meta description atraem cliques; baixa rejeição indica que o visitante encontra o que busca.</li>
+          <li>Tempo na página maior sinaliza conteúdo envolvente e alinhado à intenção da busca.</li>
+        </ul>
+        <div class="observar">
+          <h5>🔍 O que Observar no Preview</h5>
+          <ul>
+            <li>Clique entre Janeiro, Fevereiro e Março para comparar a evolução.</li>
+            <li>Observe a relação entre as métricas: quando título melhora (Lab 01) e conteúdo retém, CTR e tempo sobem enquanto rejeição cai.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- LAB 05 -->
+    <article class="lab" id="lab05" data-categoria="tecnico">
+      <div class="lab-head">
+        <span class="lab-num">LAB 05</span>
+        <h2>Simulador de URL — amigável vs não amigável</h2>
+        <span class="categoria">Técnico</span>
+      </div>
+      <p class="desc">Comparação prática do item 4 do On-Page e pilar 1 do SEO Técnico: URLs limpas melhoram indexação e experiência.</p>
+      <div class="lab-actions">
+        <button type="button" onclick="togglePreview('lab05')">🧪 Preview</button>
+        <button type="button" onclick="copiarLab('lab05')">📋 Copiar</button>
+        <button type="button" onclick="abrirOneCompiler('lab05')">▶️ OneCompiler</button>
+        <button type="button" onclick="baixarLab('lab05')">⬇️ Baixar</button>
+      </div>
+      <div class="code-box" id="code-lab05">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Simulador de URL — amigável vs não amigável&lt;/title&gt;
+  &lt;style&gt;
+body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;color:#0f172a}h2{font-size:1.1rem;color:#0284c7;margin-bottom:14px}h3{font-size:.9rem;margin-bottom:8px}.form{background:#fff;padding:14px;border:1px solid #cbd5e1;border-radius:8px;margin-bottom:14px}.form label{display:block;font-size:.8rem;font-weight:700;margin-bottom:6px}.form input{width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:.85rem;margin-bottom:8px}.form button{background:#0284c7;color:#fff;border:none;padding:9px 18px;border-radius:6px;font-weight:700;cursor:pointer}.duas{display:grid;grid-template-columns:1fr 1fr;gap:14px}.col{background:#fff;border-radius:8px;padding:14px;border:1px solid #cbd5e1}.url{padding:10px 12px;border-radius:6px;font-family:monospace;font-size:.82rem;margin-bottom:14px;word-break:break-all}.url.feia{background:#fee2e2;color:#991b1b;border-left:3px solid #dc2626}.url.bonita{background:#dcfce7;color:#166534;border-left:3px solid #16a34a}.lista{list-style:none;padding:0;font-size:.82rem;color:#475569;line-height:1.8}@media(max-width:640px){.duas{grid-template-columns:1fr}}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;🔗 Simulador de URL amigável&lt;/h2&gt;&lt;div class="form"&gt;&lt;label&gt;Digite o título da página:&lt;/label&gt;&lt;input id="inTitulo" value="Camisetas artesanais em Minas Gerais 2026"&gt;&lt;button type="button" id="btnGerar"&gt;Gerar URLs&lt;/button&gt;&lt;/div&gt;&lt;div class="duas"&gt;&lt;div class="col"&gt;&lt;h3&gt;❌ URL não amigável&lt;/h3&gt;&lt;div class="url feia" id="urlFeia"&gt;—&lt;/div&gt;&lt;h3&gt;✅ URL amigável&lt;/h3&gt;&lt;div class="url bonita" id="urlBonita"&gt;—&lt;/div&gt;&lt;/div&gt;&lt;div class="col"&gt;&lt;h3&gt;O que muda:&lt;/h3&gt;&lt;ul class="lista"&gt;&lt;li&gt;👁️ Legibilidade: usuário entende o que vai ver&lt;/li&gt;&lt;li&gt;📈 SEO: contém palavras-chave relevantes&lt;/li&gt;&lt;li&gt;🔗 Compartilhamento: URL limpa fica melhor em redes sociais&lt;/li&gt;&lt;li&gt;📊 Analytics: relatório mostra o assunto do conteúdo&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;
+  &lt;script&gt;
+function removerAcentos(s){var mapa={"á":"a","à":"a","ã":"a","â":"a","ä":"a","é":"e","è":"e","ê":"e","ë":"e","í":"i","ì":"i","î":"i","ï":"i","ó":"o","ò":"o","õ":"o","ô":"o","ö":"o","ú":"u","ù":"u","û":"u","ü":"u","ç":"c","Á":"A","À":"A","Ã":"A","Â":"A","É":"E","È":"E","Ê":"E","Í":"I","Ì":"I","Î":"I","Ó":"O","Ò":"O","Õ":"O","Ô":"O","Ú":"U","Ù":"U","Û":"U","Ç":"C"};return s.replace(/[^a-zA-Z0-9]/g,function(c){return mapa[c]!==undefined?mapa[c]:c;});}function gerar(){var t=document.getElementById("inTitulo").value;var limpo=removerAcentos(t).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");if(!limpo)limpo="pagina";document.getElementById("urlBonita").textContent="/"+limpo;var id=Math.floor(Math.random()*999)+1;document.getElementById("urlFeia").textContent="/p?id="+id+"&amp;cat="+limpo.substring(0,8)+"&amp;x=1&amp;y=2";}document.getElementById("btnGerar").addEventListener("click",gerar);document.getElementById("inTitulo").addEventListener("input",gerar);gerar();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+      </div>
+      <div class="preview-frame" id="frame-lab05"><iframe title="Preview LAB 05"></iframe></div>
+      <div class="conceitos">
+        <h4>📘 Conceitos Demonstrados</h4>
+        <ul>
+          <li>A apostila orienta: <strong>"crie URLs amigáveis que descrevam claramente o conteúdo da página"</strong>.</li>
+          <li>URLs com parâmetros (<code>?id=</code>, <code>&amp;x=</code>) não dizem ao usuário nem ao buscador qual é o assunto.</li>
+          <li>URLs sem acentos, em minúsculas e separadas por hífen ajudam no SEO e no compartilhamento.</li>
+        </ul>
+        <div class="observar">
+          <h5>🔍 O que Observar no Preview</h5>
+          <ul>
+            <li>Digite qualquer título com acentos e espaços para ver a conversão automática em <em>slug</em> limpo.</li>
+            <li>Compare com a versão com parâmetros numéricos logo acima.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- LAB 06 -->
+    <article class="lab" id="lab06" data-categoria="onpage">
+      <div class="lab-head">
+        <span class="lab-num">LAB 06</span>
+        <h2>Pesquisa por voz — pergunta × resposta direta</h2>
+        <span class="categoria">On-Page</span>
+      </div>
+      <p class="desc">Demonstra na prática como estruturar conteúdo em formato de pergunta e resposta para otimização por voz.</p>
+      <div class="lab-actions">
+        <button type="button" onclick="togglePreview('lab06')">🧪 Preview</button>
+        <button type="button" onclick="copiarLab('lab06')">📋 Copiar</button>
+        <button type="button" onclick="abrirOneCompiler('lab06')">▶️ OneCompiler</button>
+        <button type="button" onclick="baixarLab('lab06')">⬇️ Baixar</button>
+      </div>
+      <div class="code-box" id="code-lab06">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Pesquisa por voz — pergunta × resposta direta&lt;/title&gt;
+  &lt;style&gt;
+body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;color:#0f172a}h2{font-size:1.1rem;color:#0284c7;margin-bottom:14px}h3{font-size:.9rem;margin:14px 0 8px}.duas{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}.col{background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:14px}.pergunta{padding:10px 14px;border-radius:6px;font-family:monospace;font-size:.84rem;margin-bottom:12px}.pergunta.ruim{background:#fee2e2;color:#991b1b;border-left:3px solid #dc2626}.pergunta.boa{background:#dcfce7;color:#166534;border-left:3px solid #16a34a}.resposta{background:#eff6ff;border:1px solid #93c5fd;border-radius:8px;padding:12px 14px;font-size:.85rem;color:#1e40af;line-height:1.6}.lista-praticas{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.pratica{background:#fff;border:1px solid #cbd5e1;padding:10px 14px;border-radius:6px;cursor:pointer;font-size:.83rem;color:#475569;transition:.2s}.pratica:hover{border-color:#0284c7}.pratica strong{color:#0f172a;display:block;margin-bottom:2px}.info{background:#e0f2fe;border-left:4px solid #0284c7;padding:10px 14px;border-radius:6px;font-size:.8rem;color:#0369a1}@media(max-width:640px){.duas{grid-template-columns:1fr}}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;🗣️ Otimização para voz&lt;/h2&gt;&lt;div class="duas"&gt;&lt;div class="col"&gt;&lt;h3&gt;❌ Pergunta genérica (SEO tradicional)&lt;/h3&gt;&lt;div class="pergunta ruim"&gt;"SEO local"&lt;/div&gt;&lt;h3&gt;✅ Pergunta completa (voz)&lt;/h3&gt;&lt;div class="pergunta boa"&gt;"Como fazer SEO local para minha loja de Juiz de Fora?"&lt;/div&gt;&lt;/div&gt;&lt;div class="col"&gt;&lt;h3&gt;Resposta direta (ideal para voz)&lt;/h3&gt;&lt;div class="resposta"&gt;Para fazer SEO local, use palavras-chave geográficas, crie páginas específicas por filial, otimize o Google Meu Negócio e incentive avaliações de clientes. &lt;strong&gt;Comece pelo perfil do Google Meu Negócio.&lt;/strong&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;h3&gt;Boas práticas da apostila (clique para expandir):&lt;/h3&gt;&lt;div class="lista-praticas"&gt;&lt;div class="pratica" data-info="A voz usa frases completas. O texto deve começar com a resposta."&gt;&lt;strong&gt;1. Respostas Diretas&lt;/strong&gt;Comece pelo resultado, não por contexto.&lt;/div&gt;&lt;div class="pratica" data-info="Formate em perguntas e respostas (P&amp;amp;R) para alinhar com a forma da busca."&gt;&lt;strong&gt;2. P&amp;amp;R Estruturadas&lt;/strong&gt;Organize seções com perguntas claras.&lt;/div&gt;&lt;div class="pratica" data-info="Snippets em destaque são lidos em voz alta pelos assistentes."&gt;&lt;strong&gt;3. Featured Snippets&lt;/strong&gt;Estruture com listas numeradas ou parágrafos objetivos.&lt;/div&gt;&lt;div class="pratica" data-info="Use linguagem do dia a dia, sem jargão excessivo."&gt;&lt;strong&gt;4. Vocabulário Natural&lt;/strong&gt;Escreva como as pessoas falam.&lt;/div&gt;&lt;/div&gt;&lt;div class="info" id="infoPratica"&gt;Clique em uma prática para ver a explicação.&lt;/div&gt;
+  &lt;script&gt;
+document.querySelectorAll(".pratica").forEach(function(p){p.addEventListener("click",function(){document.getElementById("infoPratica").textContent=p.dataset.info;});});
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+      </div>
+      <div class="preview-frame" id="frame-lab06"><iframe title="Preview LAB 06"></iframe></div>
+      <div class="conceitos">
+        <h4>📘 Conceitos Demonstrados</h4>
+        <ul>
+          <li>Consultas por voz são mais naturais e coloquiais, geralmente em forma de pergunta completa.</li>
+          <li>Assistentes de voz (Alexa, Siri, Google Assistente) priorizam respostas diretas e concisas.</li>
+          <li>Estruturar seções em Perguntas e Respostas (P&amp;R) aumenta a chance de virar <em>Featured Snippet</em>.</li>
+        </ul>
+        <div class="observar">
+          <h5>🔍 O que Observar no Preview</h5>
+          <ul>
+            <li>Compare o termo seco ("SEO local") com a pergunta completa e a resposta objetiva em até 3 frases.</li>
+            <li>Clique em cada prática para ver o detalhe explicativo abaixo.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- LAB 07 -->
+    <article class="lab" id="lab07" data-categoria="ecommerce metricas">
+      <div class="lab-head">
+        <span class="lab-num">LAB 07</span>
+        <h2>Funil de e-commerce — da visita à compra</h2>
+        <span class="categoria">E-commerce • Métricas</span>
+      </div>
+      <p class="desc">Visualização aplicada do funil de conversão para acompanhar o comportamento em SEO para e-commerce.</p>
+      <div class="lab-actions">
+        <button type="button" onclick="togglePreview('lab07')">🧪 Preview</button>
+        <button type="button" onclick="copiarLab('lab07')">📋 Copiar</button>
+        <button type="button" onclick="abrirOneCompiler('lab07')">▶️ OneCompiler</button>
+        <button type="button" onclick="baixarLab('lab07')">⬇️ Baixar</button>
+      </div>
+      <div class="code-box" id="code-lab07">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Funil de e-commerce — da visita à compra&lt;/title&gt;
+  &lt;style&gt;
+body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;color:#0f172a}h2{font-size:1.1rem;color:#0284c7;margin-bottom:14px}.funil{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}.etapa{background:#fff;padding:2px;border-radius:8px;cursor:pointer;transition:.2s}.etapa:hover{transform:scale(1.01)}.barra{color:#fff;padding:12px 16px;border-radius:6px;font-weight:bold;font-size:.84rem}.info{background:#e0f2fe;border-left:4px solid #0284c7;padding:10px 14px;border-radius:6px;font-size:.8rem;color:#0369a1}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;🛒 Funil de conversão (e-commerce)&lt;/h2&gt;&lt;div class="funil"&gt;&lt;div class="etapa" data-info="Otimize: páginas de categoria, meta tags de produto, imagens de qualidade, Schema de Produto para enriquecer SERP."&gt;&lt;div class="barra" style="width:100%;background:#0284c7"&gt;&lt;span&gt;1. Visita • 10.000&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class="etapa" data-info="Otimize: descrições únicas, avaliações de clientes, produtos relacionados."&gt;&lt;div class="barra" style="width:35%;background:#0891b2"&gt;&lt;span&gt;2. Produto • 3.500&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class="etapa" data-info="Otimize: preço claro, frete grátis, botão de compra visível, mobile-first."&gt;&lt;div class="barra" style="width:15%;background:#0d9488"&gt;&lt;span&gt;3. Carrinho • 1.500&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class="etapa" data-info="Gargalo típico. Otimize: formulário curto, opções de pagamento, prova social. Cada melhoria no checkout vale mais que dobrar visitas."&gt;&lt;div class="barra" style="width:5%;background:#059669"&gt;&lt;span&gt;4. Compra • 500&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class="info" id="infoFunil"&gt;Clique em uma etapa para ver a dica específica de otimização.&lt;/div&gt;
+  &lt;script&gt;
+document.querySelectorAll(".etapa").forEach(function(e){e.addEventListener("click",function(){document.getElementById("infoFunil").textContent=e.dataset.info;});});
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+      </div>
+      <div class="preview-frame" id="frame-lab07"><iframe title="Preview LAB 07"></iframe></div>
+      <div class="conceitos">
+        <h4>📘 Conceitos Demonstrados</h4>
+        <ul>
+          <li>Acompanha cada estágio da jornada orgânica no e-commerce: <strong>Visita → Produto → Carrinho → Compra</strong>.</li>
+          <li>Mostra na prática como a <strong>Taxa de Conversão Orgânica</strong> depende de SEO na entrada e de UX/velocidade até a compra.</li>
+          <li>Identificar gargalos no carrinho ou checkout gera mais vendas do que apenas atrair mais tráfego.</li>
+        </ul>
+        <div class="observar">
+          <h5>🔍 O que Observar no Preview</h5>
+          <ul>
+            <li>Clique em cada barra do funil para ver as ações de SEO e usabilidade recomendadas para aquela etapa.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- LAB 08 -->
+    <article class="lab" id="lab08" data-categoria="local">
+      <div class="lab-head">
+        <span class="lab-num verde">LAB 08</span>
+        <h2>Google Meu Negócio — os 8 recursos da apostila</h2>
+        <span class="categoria">Local</span>
+      </div>
+      <p class="desc">Painel visual interativo com os 8 recursos do Google Meu Negócio para fortalecer o SEO local.</p>
+      <div class="lab-actions">
+        <button type="button" onclick="togglePreview('lab08')">🧪 Preview</button>
+        <button type="button" onclick="copiarLab('lab08')">📋 Copiar</button>
+        <button type="button" onclick="abrirOneCompiler('lab08')">▶️ OneCompiler</button>
+        <button type="button" onclick="baixarLab('lab08')">⬇️ Baixar</button>
+      </div>
+      <div class="code-box" id="code-lab08">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Google Meu Negócio — os 8 recursos&lt;/title&gt;
+  &lt;style&gt;
+body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;color:#0f172a}h2{font-size:1.1rem;color:#0284c7;margin-bottom:14px}.grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:14px}.card{background:#fff;border:2px solid #cbd5e1;border-top:4px solid #0284c7;border-radius:10px;padding:12px 14px;cursor:pointer;transition:.2s}.card:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(2,132,199,.15)}.card .icon{font-size:1.5rem;margin-bottom:4px}.card h4{font-size:.85rem;color:#0369a1;margin-bottom:4px}.card p{font-size:.75rem;color:#475569;margin:0;line-height:1.4}.card:nth-child(2){border-top-color:#10b981}.card:nth-child(3){border-top-color:#7c3aed}.card:nth-child(4){border-top-color:#ea580c}.card:nth-child(5){border-top-color:#ec4899}.card:nth-child(6){border-top-color:#f59e0b}.card:nth-child(7){border-top-color:#06b6d4}.card:nth-child(8){border-top-color:#8b5cf6}.info{background:#e0f2fe;border-left:4px solid #0284c7;padding:10px 14px;border-radius:6px;font-size:.8rem;color:#0369a1}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;📍 Google Meu Negócio — os 8 recursos&lt;/h2&gt;&lt;div class="grade"&gt;&lt;div class="card" data-info="Passo 1 obrigatório. Sem reivindicar, a empresa não tem controle sobre as informações exibidas."&gt;&lt;div class="icon"&gt;✅&lt;/div&gt;&lt;h4&gt;1. Reivindicação&lt;/h4&gt;&lt;p&gt;Reivindicar e verificar a ficha.&lt;/p&gt;&lt;/div&gt;&lt;div class="card" data-info="Horário, telefone, endereço e categoria completos. Categorias corretas são fundamentais para aparecer nas buscas locais."&gt;&lt;div class="icon"&gt;📋&lt;/div&gt;&lt;h4&gt;2. Informações&lt;/h4&gt;&lt;p&gt;Horário, telefone, endereço, categoria.&lt;/p&gt;&lt;/div&gt;&lt;div class="card" data-info="Fotos de alta resolução do estabelecimento, produtos e equipe. Perfis com fotos recebem mais cliques."&gt;&lt;div class="icon"&gt;📸&lt;/div&gt;&lt;h4&gt;3. Fotos&lt;/h4&gt;&lt;p&gt;Estabelecimento, produtos, equipe.&lt;/p&gt;&lt;/div&gt;&lt;div class="card" data-info="Responder avaliações (mesmo negativas) mostra profissionalismo e melhora a reputação."&gt;&lt;div class="icon"&gt;💬&lt;/div&gt;&lt;h4&gt;4. Avaliações&lt;/h4&gt;&lt;p&gt;Responder positivas e negativas.&lt;/p&gt;&lt;/div&gt;&lt;div class="card" data-info="Publicações semanais (ofertas, novidades) mantêm o perfil ativo e aumentam a visibilidade."&gt;&lt;div class="icon"&gt;📢&lt;/div&gt;&lt;h4&gt;5. Publicações&lt;/h4&gt;&lt;p&gt;Ofertas, eventos e novidades.&lt;/p&gt;&lt;/div&gt;&lt;div class="card" data-info="Insights mostram como as pessoas encontram e interagem com o negócio. Essencial para ajustar a estratégia."&gt;&lt;div class="icon"&gt;📊&lt;/div&gt;&lt;h4&gt;6. Insights&lt;/h4&gt;&lt;p&gt;Como as pessoas encontram o negócio.&lt;/p&gt;&lt;/div&gt;&lt;div class="card" data-info="Geotague fotos com a localização — melhora a relevância geográfica nas buscas locais."&gt;&lt;div class="icon"&gt;📍&lt;/div&gt;&lt;h4&gt;7. Geotagging&lt;/h4&gt;&lt;p&gt;Marcar fotos com localização.&lt;/p&gt;&lt;/div&gt;&lt;div class="card" data-info="Mensagens diretas e reservas online quando fizer sentido. Adiciona um canal a mais de conversão."&gt;&lt;div class="icon"&gt;🔧&lt;/div&gt;&lt;h4&gt;8. Recursos extras&lt;/h4&gt;&lt;p&gt;Mensagens e reservas online.&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class="info" id="infoRecurso"&gt;Clique em um recurso para ver detalhes práticos.&lt;/div&gt;
+  &lt;script&gt;
+document.querySelectorAll(".card").forEach(function(c){c.addEventListener("click",function(){document.getElementById("infoRecurso").textContent=c.dataset.info;});});
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+      </div>
+      <div class="preview-frame" id="frame-lab08"><iframe title="Preview LAB 08"></iframe></div>
+      <div class="conceitos">
+        <h4>📘 Conceitos Demonstrados</h4>
+        <ul>
+          <li>Os 8 recursos do GMN citados na apostila: reivindicação, informações, fotos, avaliações, publicações, insights, geotagging e recursos adicionais.</li>
+          <li>Sem reivindicar e verificar a ficha, a empresa não controla seus dados nas buscas e no Google Maps.</li>
+          <li>Responder avaliações e manter fotos com localização (geotagging) reforçam confiança e relevância geográfica.</li>
+        </ul>
+        <div class="observar">
+          <h5>🔍 O que Observar no Preview</h5>
+          <ul>
+            <li>Clique em cada um dos 8 cards para visualizar a aplicação prática do recurso.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- CTA FINAL -->
+    <div class="projeto-card">
+      <h2>🚀 Concluiu os Laboratórios?</h2>
+      <p>Agora volte para o Guia Rápido para revisar qualquer ponto ou avance direto para o Desafio Gamificado de 20 questões do Tema 03.</p>
+      <div class="botoes">
+        <a href="atividades.html" target="_blank">🎮 Abrir Desafio (20 Questões)</a>
+        <a href="tema03.html" target="_blank" class="sec">📚 Abrir Guia Rápido</a>
+      </div>
+    </div>
+
+  </main>
 </div>
 
-<div class="toast" id="toast">✅ Feito!</div>
+<div class="toast" id="toast">✅ Copiado!</div>
 
 <script>
-var LABS = [
-  {
-    id:"lab1", num:"LAB 01",
-    titulo:"Simulador de meta tag — título e meta description com preview",
-    sub:"Aplicação prática do item 1 do On-Page: criar títulos exclusivos e meta descrições envolventes para atrair cliques.",
-    categorias:["onpage"],
-    conceitos:[
-      "A apostila recomenda <strong>títulos exclusivos e envolventes</strong>, incluindo variações de palavras-chave e elementos persuasivos.",
-      "O título deve ter aproximadamente 60 caracteres (o Google corta acima disso). A meta description fica entre 120 e 160.",
-      "Elementos persuasivos (números, benefícios, urgência) aumentam o CTR — e a apostila lista CTR como uma das 10 métricas avançadas."
-    ],
-    observar:[
-      "Digite no campo <strong>Título</strong> e veja o texto virar prévia de SERP em tempo real.",
-      "A contagem fica <strong>vermelha</strong> quando passa de 60 (título) ou 160 (meta) — é o limite do que o Google exibe antes de cortar.",
-      "Teste com palavras como 'grátis', '2026', 'guia' — o preview reflete cada mudança."
-    ],
-    html:'<h2>📝 Simulador de Meta Tags</h2><div class="form"><label>Título:</label><input id="inTitulo" value="Guia completo de SEO Avançado 2026"><div id="cTitulo" class="contador">0/60</div><label>Meta Description:</label><textarea id="inMeta">Aprenda técnicas de otimização on-page, dados estruturados e link building para aumentar a visibilidade do seu site nos mecanismos de busca.</textarea><div id="cMeta" class="contador">0/160</div></div><h3>Preview na SERP:</h3><div class="serp"><div class="url">www.seusite.com.br › seo-avancado</div><div class="titulo" id="pvtitulo">Guia completo de SEO Avançado 2026</div><div class="meta" id="pvmeta"></div></div>',
-    css:'body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;color:#0f172a}h2{font-size:1.1rem;color:#0284c7;margin-bottom:14px}h3{font-size:.95rem;color:#0f172a;margin:16px 0 8px}.form label{display:block;font-size:.82rem;font-weight:700;margin-top:10px;margin-bottom:4px}.form input,.form textarea{width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:6px;font-family:inherit;font-size:.85rem}.form textarea{resize:vertical;min-height:60px;height:60px}.contador{font-size:.7rem;color:#64748b;text-align:right;margin-top:3px}.contador.alerta{color:#dc2626;font-weight:700}.serp{background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:12px 16px;max-width:600px}.serp .url{font-size:.75rem;color:#0f766e;margin-bottom:3px}.serp .titulo{color:#1a0dab;font-size:1rem;font-weight:600;line-height:1.3;margin-bottom:3px}.serp .meta{font-size:.8rem;color:#4d5156;line-height:1.4}',
-    js:'function atualizar(){var t=document.getElementById("inTitulo").value;var m=document.getElementById("inMeta").value;document.getElementById("pvtitulo").textContent=t||"(título)";var metaCurta=m.substring(0,160)+(m.length>160?"...":"");document.getElementById("pvmeta").textContent=metaCurta||"(meta)";var ct=document.getElementById("cTitulo");var cm=document.getElementById("cMeta");ct.textContent=t.length+"/60";cm.textContent=m.length+"/160";ct.classList.toggle("alerta",t.length>60);cm.classList.toggle("alerta",m.length>160);}document.getElementById("inTitulo").addEventListener("input",atualizar);document.getElementById("inMeta").addEventListener("input",atualizar);atualizar();'
-  },
-  {
-    id:"lab2", num:"LAB 02",
-    titulo:"SERP com e sem Rich Snippet — comparação lado a lado",
-    sub:"Demonstra a diferença visual que os dados estruturados (Schema) fazem nos resultados de busca.",
-    categorias:["schema"],
-    conceitos:[
-      "Rich snippets são resultados <strong>enriquecidos</strong> exibidos nos mecanismos de busca, incluindo avaliações, preços e detalhes adicionais.",
-      "A apostila afirma: 'os rich snippets destacam-se visualmente, atraindo mais cliques e aumentando a taxa de cliques (CTR)'.",
-      "Schema tipo <strong>Produto</strong> permite exibir preço e nota; <strong>Avaliação</strong> exibe estrelas — ambos implementados com <code>application/ld+json</code>."
-    ],
-    observar:[
-      "Comparação direta: o resultado à esquerda é simples; o da direita tem preço, nota e reviews.",
-      "Note o impacto visual: as estrelas chamam atenção antes do texto.",
-      "O lado direito mostra exatamente o que o Google extrai do Schema de Produto."
-    ],
-    html:'<h2>📊 SERP: com e sem Rich Snippet</h2><div class="duas"><div class="col"><h3>❌ Sem Schema</h3><div class="serp"><div class="url">www.loja.com › camisetas › artesanal</div><div class="titulo">Camiseta Artesanal — Loja</div><div class="meta">Camiseta feita à mão em Minas Gerais com algodão orgânico. Frete grátis.</div></div></div><div class="col"><h3>✅ Com Schema (Rich Snippet)</h3><div class="serp rich"><div class="url">www.loja.com › camisetas › artesanal</div><div class="titulo">Camiseta Artesanal — Loja</div><div class="meta">Camiseta feita à mão em Minas Gerais com algodão orgânico. Frete grátis.</div><div class="extras"><span class="estrelas">★★★★★</span> <span class="nota">4.8</span> <span class="reviews">(127)</span> • <span class="preco">R$ 79,90</span> • <span class="tag">Em estoque</span></div></div></div></div>',
-    css:'body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;color:#0f172a}h2{font-size:1.1rem;color:#0284c7;margin-bottom:14px}.duas{display:grid;grid-template-columns:1fr 1fr;gap:14px}.col h3{font-size:.85rem;margin-bottom:8px}.serp{background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:12px 16px}.serp.rich{border:2px solid #10b981;background:#f0fdf4}.serp .url{font-size:.72rem;color:#0f766e;margin-bottom:3px}.serp .titulo{color:#1a0dab;font-size:.95rem;font-weight:600;line-height:1.3;margin-bottom:3px}.serp .meta{font-size:.78rem;color:#4d5156;line-height:1.4}.extras{margin-top:6px;font-size:.78rem;color:#4d5156}.estrelas{color:#f59e0b;letter-spacing:-1px}.nota{font-weight:700;color:#0f172a}.reviews{color:#64748b}.preco{color:#059669;font-weight:700}.tag{background:#dcfce7;color:#15803d;padding:1px 6px;border-radius:4px;font-size:.7rem;font-weight:700}@media(max-width:640px){.duas{grid-template-columns:1fr}}',
-    js:null
-  },
-  {
-    id:"lab3", num:"LAB 03",
-    titulo:"Gerador de JSON-LD — marcação Schema interativa",
-    sub:"Cria, visualiza e valida código JSON-LD para diferentes tipos de Schema, conforme a apostila.",
-    categorias:["schema"],
-    conceitos:[
-      "A apostila cita 5 tipos comuns de Schema: <strong>Artigo, Receita, Evento, Produto, Avaliação</strong>.",
-      "A apostila usa os nomes canônicos do Schema.org em inglês: <code>Article</code>, <code>Recipe</code>, <code>Event</code>, <code>Product</code>, <code>Review</code>.",
-      "O Google fornece o <strong>Teste de Dados Estruturados</strong> para validar a marcação antes de publicar."
-    ],
-    observar:[
-      "Escolha o tipo de Schema no seletor para ver o código JSON-LD gerado com o @type correto (em inglês, para validação no Google).",
-      "Preencha campos como nome, preço e nota — o JSON se atualiza em tempo real.",
-      "Copie o código e teste no Rich Results Test do Google (search.google.com/test/rich-results)."
-    ],
-    html:'<h2>📊 Gerador de JSON-LD</h2><div class="form"><label>Tipo de Schema:</label><select id="selTipo"><option value="Product">🛒 Produto (Product)</option><option value="Article">📰 Artigo (Article)</option><option value="Recipe">🍰 Receita (Recipe)</option><option value="Event">🎫 Evento (Event)</option><option value="Review">⭐ Avaliação (Review)</option></select><label>Nome:</label><input id="inNome" value="Camiseta Artesanal"><label>Preço (Produto/Evento):</label><input id="inPreco" value="79.90"><label>Nota (Avaliação):</label><input id="inNota" value="4.8"></div><h3>Código gerado:</h3><pre id="codigo"></pre>',
-    css:'body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;color:#0f172a}h2{font-size:1.1rem;color:#0284c7;margin-bottom:14px}h3{font-size:.9rem;color:#0f172a;margin:14px 0 8px}.form{background:#fff;padding:14px;border:1px solid #cbd5e1;border-radius:8px;margin-bottom:12px}.form label{display:block;font-size:.78rem;font-weight:700;margin-top:8px;margin-bottom:3px}.form input,.form select{width:100%;padding:7px 10px;border:1px solid #cbd5e1;border-radius:5px;font-family:inherit;font-size:.82rem}.form label:first-child{margin-top:0}pre{background:#0f172a;color:#38bdf8;padding:14px;border-radius:8px;font-family:"Courier New",monospace;font-size:.78rem;overflow-x:auto;line-height:1.5;white-space:pre-wrap;word-wrap:break-word;min-height:180px}',
-    js:'function gerar(){var tipo=document.getElementById("selTipo").value;var nome=document.getElementById("inNome").value;var preco=parseFloat(document.getElementById("inPreco").value)||0;var nota=parseFloat(document.getElementById("inNota").value)||0;var obj={"@context":"https://schema.org","@type":tipo,"name":nome};if(tipo==="Product"){obj.image="https://seusite.com.br/img/produto.jpg";obj.sku="CAM-ART-001";obj.brand={"@type":"Brand","name":"Sua Marca"};obj.offers={"@type":"Offer","url":"https://seusite.com.br/produto","price":preco,"priceCurrency":"BRL","availability":"https://schema.org/InStock","itemCondition":"https://schema.org/NewCondition"};obj.aggregateRating={"@type":"AggregateRating","ratingValue":nota,"reviewCount":127,"bestRating":5,"worstRating":1};}if(tipo==="Recipe"){obj.recipeIngredient=["2 xícaras de farinha","1 colher de sal"];obj.recipeInstructions=["Misture os ingredientes","Asse por 30 minutos"];obj.prepTime="PT15M";obj.cookTime="PT30M";}if(tipo==="Event"){obj.startDate="2026-12-01T19:00:00-03:00";obj.location={"@type":"Place","name":"Centro de Convenções","address":"Juiz de Fora, MG"};obj.offers={"@type":"Offer","price":preco,"priceCurrency":"BRL","availability":"https://schema.org/InStock"};}if(tipo==="Review"){obj.itemReviewed={"@type":"Product","name":nome};obj.reviewRating={"@type":"Rating","ratingValue":nota,"bestRating":5};obj.author={"@type":"Person","name":"Cliente"};}if(tipo==="Article"){obj.author={"@type":"Person","name":"Autor"};obj.datePublished="2026-01-15";obj.headline=nome;}var txt="<"+"script type=\\"application/ld+json\\">\\n"+JSON.stringify(obj,null,2)+"\\n<"+"/script>";document.getElementById("codigo").textContent=txt;}["selTipo","inNome","inPreco","inNota"].forEach(function(id){var el=document.getElementById(id);el.addEventListener("input",gerar);el.addEventListener("change",gerar);});gerar();'
-  },
-  {
-    id:"lab4", num:"LAB 04",
-    titulo:"Painel de métricas — CTR, Rejeição e Tempo na Página",
-    sub:"Dashboard visual comparando três métricas fundamentais da apostila, com dados fictícios de exemplo.",
-    categorias:["metricas"],
-    conceitos:[
-      "A apostila lista 10 métricas avançadas. Este painel foca em <strong>CTR, taxa de rejeição e tempo na página</strong>.",
-      "CTR alta indica que título e meta description são atrativos e relevantes.",
-      "Baixa taxa de rejeição indica que os visitantes encontram o que procuram e exploram mais páginas."
-    ],
-    observar:[
-      "Clique nos botões para comparar mês a mês.",
-      "Note que a CTR subiu enquanto a rejeição caiu — sinal de que o trabalho em título (Lab 01) funcionou.",
-      "O tempo na página mais do que dobrou, indicando conteúdo mais envolvente."
-    ],
-    html:'<h2>📈 Dashboard de métricas</h2><div class="botoes"><button type="button" class="met ativo" data-mes="jan">Janeiro</button><button type="button" class="met" data-mes="fev">Fevereiro</button><button type="button" class="met" data-mes="mar">Março</button></div><div class="painel"><div class="card-met"><div class="icon">🎯</div><div class="valor" id="vCTR">—</div><div class="label">CTR</div></div><div class="card-met"><div class="icon">💔</div><div class="valor" id="vRej">—</div><div class="label">Rejeição</div></div><div class="card-met"><div class="icon">⏱️</div><div class="valor" id="vTempo">—</div><div class="label">Tempo</div></div></div><div class="info" id="infoMes">Selecione um mês para ver os detalhes.</div>',
-    css:'body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;color:#0f172a}h2{font-size:1.1rem;color:#0284c7;margin-bottom:14px}.botoes{display:flex;gap:6px;margin-bottom:14px}.met{background:#1e293b;color:#cbd5e1;border:none;padding:7px 16px;border-radius:20px;font-size:.78rem;font-weight:700;cursor:pointer;transition:.2s}.met:hover{background:#334155}.met.ativo{background:#0284c7;color:#fff}.painel{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}.card-met{background:#fff;border:2px solid #cbd5e1;border-radius:12px;padding:18px;text-align:center}.icon{font-size:1.6rem;margin-bottom:4px}.valor{font-size:1.8rem;font-weight:900;color:#0369a1;margin-bottom:2px}.label{font-size:.74rem;color:#64748b;font-weight:700;text-transform:uppercase}.info{background:#e0f2fe;border-left:4px solid #0284c7;padding:10px 14px;border-radius:6px;font-size:.8rem;color:#0369a1}',
-    js:'var dados={jan:{ctr:"2.1%",rej:"78%",tempo:"45s",info:"Janeiro: métricas ainda baixas, refletindo a situação antes da otimização."},fev:{ctr:"3.8%",rej:"62%",tempo:"1min10s",info:"Fevereiro: título e meta description foram reescritos e rejeição caiu."},mar:{ctr:"5.2%",rej:"45%",tempo:"2min05s",info:"Março: otimização consolidada — todos os indicadores evoluíram."}};function atualizarMes(mes){var d=dados[mes];if(!d)return;document.getElementById("vCTR").textContent=d.ctr;document.getElementById("vRej").textContent=d.rej;document.getElementById("vTempo").textContent=d.tempo;document.getElementById("infoMes").textContent=d.info;}document.querySelectorAll(".met").forEach(function(b){b.addEventListener("click",function(){document.querySelectorAll(".met").forEach(function(x){x.classList.remove("ativo");});b.classList.add("ativo");atualizarMes(b.dataset.mes);});});atualizarMes("jan");'
-  },
-  {
-    id:"lab5", num:"LAB 05",
-    titulo:"Simulador de URL — amigável vs não amigável",
-    sub:"Comparação prática do item 4 do SEO técnico: como URLs amigáveis melhoram indexação e experiência do usuário.",
-    categorias:["tecnico"],
-    conceitos:[
-      "A apostila: <strong>'crie URLs amigáveis que descrevam claramente o conteúdo da página'</strong>.",
-      "URLs com caracteres especiais (?, &amp;, =, %) são <em>opacas</em> para o usuário e para os buscadores.",
-      "URLs com palavras-chave relevantes ajudam o SEO on-page além de serem mais compartilháveis."
-    ],
-    observar:[
-      "Digite o título de uma página e veja a URL amigável gerada automaticamente.",
-      "Compare com a URL 'crua' com parâmetros — você consegue dizer o que ela contém?",
-      "URLs com palavras-chave ficam melhores em compartilhamento e CTR."
-    ],
-    html:'<h2>🔗 Simulador de URL amigável</h2><div class="form"><label>Digite o título da página:</label><input id="inTitulo" value="Camisetas artesanais em Minas Gerais 2026"><button type="button" id="btnGerar">Gerar URLs</button></div><div class="duas"><div class="col"><h3>❌ URL não amigável</h3><div class="url feia" id="urlFeia">—</div><h3>✅ URL amigável</h3><div class="url bonita" id="urlBonita">—</div></div><div class="col"><h3>O que muda:</h3><ul class="lista"><li>👁️ Legibilidade: usuário entende o que vai ver</li><li>📈 SEO: contém palavras-chave relevantes</li><li>🔗 Compartilhamento: URL limpa fica melhor em redes sociais</li><li>📊 Analytics: relatório mostra o assunto do conteúdo</li></ul></div></div>',
-    css:'body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;color:#0f172a}h2{font-size:1.1rem;color:#0284c7;margin-bottom:14px}h3{font-size:.9rem;margin-bottom:8px}.form{background:#fff;padding:14px;border:1px solid #cbd5e1;border-radius:8px;margin-bottom:14px}.form label{display:block;font-size:.8rem;font-weight:700;margin-bottom:6px}.form input{width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:.85rem;margin-bottom:8px}.form button{background:#0284c7;color:#fff;border:none;padding:9px 18px;border-radius:6px;font-weight:700;cursor:pointer}.duas{display:grid;grid-template-columns:1fr 1fr;gap:14px}.col{background:#fff;border-radius:8px;padding:14px;border:1px solid #cbd5e1}.url{padding:10px 12px;border-radius:6px;font-family:monospace;font-size:.82rem;margin-bottom:14px;word-break:break-all}.url.feia{background:#fee2e2;color:#991b1b;border-left:3px solid #dc2626}.url.bonita{background:#dcfce7;color:#166534;border-left:3px solid #16a34a}.lista{list-style:none;padding:0;font-size:.82rem;color:#475569;line-height:1.8}@media(max-width:640px){.duas{grid-template-columns:1fr}}',
-    js:'function removerAcentos(s){var mapa={"á":"a","à":"a","ã":"a","â":"a","ä":"a","é":"e","è":"e","ê":"e","ë":"e","í":"i","ì":"i","î":"i","ï":"i","ó":"o","ò":"o","õ":"o","ô":"o","ö":"o","ú":"u","ù":"u","û":"u","ü":"u","ç":"c","Á":"A","À":"A","Ã":"A","Â":"A","É":"E","È":"E","Ê":"E","Í":"I","Ì":"I","Î":"I","Ó":"O","Ò":"O","Õ":"O","Ô":"O","Ú":"U","Ù":"U","Û":"U","Ç":"C"};return s.replace(/[^a-zA-Z0-9]/g,function(c){return mapa[c]!==undefined?mapa[c]:c;});}function gerar(){var t=document.getElementById("inTitulo").value;var limpo=removerAcentos(t).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");if(!limpo)limpo="pagina";document.getElementById("urlBonita").textContent="/"+limpo;var id=Math.floor(Math.random()*999)+1;document.getElementById("urlFeia").textContent="/p?id="+id+"&cat="+limpo.substring(0,8)+"&x=1&y=2";}document.getElementById("btnGerar").addEventListener("click",gerar);document.getElementById("inTitulo").addEventListener("input",gerar);gerar();'
-  },
-  {
-    id:"lab6", num:"LAB 06",
-    titulo:"Pesquisa por voz — pergunta × resposta direta",
-    sub:"Demonstra na prática como estruturar conteúdo em formato de pergunta e resposta para otimização por voz.",
-    categorias:["onpage"],
-    conceitos:[
-      "A apostila: <strong>'a pesquisa por voz é caracterizada por consultas mais naturais e coloquiais'</strong>. Usuários fazem perguntas completas.",
-      "Respostas diretas e concisas são altamente valorizadas por assistentes de voz (Alexa, Siri, Google Assistant).",
-      "Estruturar em perguntas e respostas (P&amp;R) alinha o conteúdo com a forma como as perguntas são formuladas."
-    ],
-    observar:[
-      "Compare a pergunta curta (ineficaz) com a pergunta longa (ideal para voz).",
-      "Clique em cada prática: a explicação aparece abaixo.",
-      "Adote o padrão: pergunta completa como título + resposta objetiva em até 3 frases."
-    ],
-    html:'<h2>🗣️ Otimização para voz</h2><div class="duas"><div class="col"><h3>❌ Pergunta genérica (SEO tradicional)</h3><div class="pergunta ruim">"SEO local"</div><h3>✅ Pergunta completa (voz)</h3><div class="pergunta boa">"Como fazer SEO local para minha loja de Juiz de Fora?"</div></div><div class="col"><h3>Resposta direta (ideal para voz)</h3><div class="resposta">Para fazer SEO local, use palavras-chave geográficas, crie páginas específicas por filial, otimize o Google Meu Negócio e incentive avaliações de clientes. <strong>Comece pelo perfil do Google Meu Negócio.</strong></div></div></div><h3>Boas práticas da apostila (clique para expandir):</h3><div class="lista-praticas"><div class="pratica" data-info="A voz usa frases completas. O texto deve começar com a resposta."><strong>1. Respostas Diretas</strong>Comece pelo resultado, não por contexto.</div><div class="pratica" data-info="Formate em perguntas e respostas (P&amp;R) para alinhar com a forma da busca."><strong>2. P&amp;R Estruturadas</strong>Organize seções com perguntas claras.</div><div class="pratica" data-info="Snippets em destaque são lidos em voz alta pelos assistentes."><strong>3. Featured Snippets</strong>Estruture com listas numeradas ou parágrafos objetivos.</div><div class="pratica" data-info="Use linguagem do dia a dia, sem jargão excessivo."><strong>4. Vocabulário Natural</strong>Escreva como as pessoas falam.</div></div><div class="info" id="infoPratica">Clique em uma prática para ver a explicação.</div>',
-    css:'body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;color:#0f172a}h2{font-size:1.1rem;color:#0284c7;margin-bottom:14px}h3{font-size:.9rem;margin:14px 0 8px}.duas{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}.col{background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:14px}.pergunta{padding:10px 14px;border-radius:6px;font-family:monospace;font-size:.84rem;margin-bottom:12px}.pergunta.ruim{background:#fee2e2;color:#991b1b;border-left:3px solid #dc2626}.pergunta.boa{background:#dcfce7;color:#166534;border-left:3px solid #16a34a}.resposta{background:#eff6ff;border:1px solid #93c5fd;border-radius:8px;padding:12px 14px;font-size:.85rem;color:#1e40af;line-height:1.6}.lista-praticas{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.pratica{background:#fff;border:1px solid #cbd5e1;padding:10px 14px;border-radius:6px;cursor:pointer;font-size:.83rem;color:#475569;transition:.2s}.pratica:hover{border-color:#0284c7}.pratica strong{color:#0f172a;display:block;margin-bottom:2px}.info{background:#e0f2fe;border-left:4px solid #0284c7;padding:10px 14px;border-radius:6px;font-size:.8rem;color:#0369a1}@media(max-width:640px){.duas{grid-template-columns:1fr}}',
-    js:'document.querySelectorAll(".pratica").forEach(function(p){p.addEventListener("click",function(){document.getElementById("infoPratica").textContent=p.dataset.info;});});'
-  },
-  {
-    id:"lab7", num:"LAB 07",
-    titulo:"Funil de e-commerce — da visita à compra",
-    sub:"Visualização aplicada do funil de métricas com benchmarks de mercado para SEO em e-commerce.",
-    categorias:["ecommerce","metricas"],
-    conceitos:[
-      "A apostila cita <strong>Análise de Funil</strong> para acompanhar o comportamento em cada estágio da jornada.",
-      "Em e-commerce o funil típico tem 4 etapas: visita → página de produto → carrinho → compra.",
-      "Identificar o gargalo é mais importante que aumentar o tráfego total — se 80% deixa o carrinho, otimizar checkout gera mais resultado que dobrar visitas."
-    ],
-    observar:[
-      "Os valores de cada etapa mostram a perda real. A maior perda costuma estar entre carrinho e compra.",
-      "Compare com benchmarks: e-commerce maduro converte entre 2% e 4% no topo.",
-      "Clique em cada etapa para ver a dica específica de otimização."
-    ],
-    html:'<h2>🛒 Funil de conversão (e-commerce)</h2><div class="funil"><div class="etapa" data-info="Otimize: páginas de categoria, meta tags de produto, imagens de qualidade, Schema de Produto para enriquecer SERP."><div class="barra" style="width:100%;background:#0284c7"><span>1. Visita • 10.000</span></div></div><div class="etapa" data-info="Otimize: descrições únicas, avaliações de clientes, produtos relacionados."><div class="barra" style="width:35%;background:#0891b2"><span>2. Produto • 3.500</span></div></div><div class="etapa" data-info="Otimize: preço claro, frete grátis, botão de compra visível, mobile-first."><div class="barra" style="width:15%;background:#0d9488"><span>3. Carrinho • 1.500</span></div></div><div class="etapa" data-info="Gargalo típico. Otimize: formulário curto, opções de pagamento, prova social. Cada 100 melhoras no checkout valem mais que 1.000 visitas extras."><div class="barra" style="width:5%;background:#059669"><span>4. Compra • 500</span></div></div></div><div class="info" id="infoFunil">Clique em uma etapa para ver a dica específica de otimização.</div>',
-    css:'body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;color:#0f172a}h2{font-size:1.1rem;color:#0284c7;margin-bottom:14px}.funil{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}.etapa{background:#fff;padding:2px;border-radius:8px;cursor:pointer;transition:.2s}.etapa:hover{transform:scale(1.01)}.barra{color:#fff;padding:12px 16px;border-radius:6px;font-weight:bold;font-size:.84rem}.info{background:#e0f2fe;border-left:4px solid #0284c7;padding:10px 14px;border-radius:6px;font-size:.8rem;color:#0369a1}',
-    js:'document.querySelectorAll(".etapa").forEach(function(e){e.addEventListener("click",function(){document.getElementById("infoFunil").textContent=e.dataset.info;});});'
-  },
-  {
-    id:"lab8", num:"LAB 08",
-    titulo:"Google Meu Negócio — os 8 recursos",
-    sub:"Painel visual com os 8 recursos do Google Meu Negócio citados pela apostila.",
-    categorias:["local"],
-    conceitos:[
-      "A apostila lista 8 recursos do GMN: reivindicação, informações, fotos, avaliações, publicações, insights, geotagging e recursos adicionais.",
-      "Reivindicar e verificar a ficha é o primeiro passo — sem isso, a empresa não controla o que é exibido.",
-      "Responder avaliações (positivas e negativas) é uma prática que afeta reputação e posicionamento local."
-    ],
-    observar:[
-      "Todos os 8 recursos em cards. Cada um é uma ação concreta que impacta SEO local.",
-      "Clique em cada card para ver um exemplo real de aplicação.",
-      "Geotagging de fotos é frequentemente ignorado — mas melhora visibilidade local significativamente."
-    ],
-    html:'<h2>📍 Google Meu Negócio — os 8 recursos</h2><div class="grade"><div class="card" data-info="Passo 1 obrigatório. Sem reivindicar, a empresa não tem controle sobre as informações exibidas."><div class="icon">✅</div><h4>1. Reivindicação</h4><p>Reivindicar e verificar a ficha.</p></div><div class="card" data-info="Horário, telefone, endereço e categoria completos. Categorias corretas são fundamentais para aparecer nas buscas locais."><div class="icon">📋</div><h4>2. Informações</h4><p>Horário, telefone, endereço, categoria.</p></div><div class="card" data-info="Fotos de alta resolução do estabelecimento, produtos e equipe. Perfis com fotos recebem mais cliques."><div class="icon">📸</div><h4>3. Fotos</h4><p>Estabelecimento, produtos, equipe.</p></div><div class="card" data-info="Responder avaliações (mesmo negativas) mostra profissionalismo e melhora reputação."><div class="icon">💬</div><h4>4. Avaliações</h4><p>Responder positivas e negativas.</p></div><div class="card" data-info="Publicações semanais (ofertas, novidades) mantêm o perfil ativo e aumentam a visibilidade."><div class="icon">📢</div><h4>5. Publicações</h4><p>Ofertas, eventos e novidades.</p></div><div class="card" data-info="Insights mostram como as pessoas encontram e interagem com o negócio. Essencial para ajustar a estratégia."><div class="icon">📊</div><h4>6. Insights</h4><p>Como as pessoas encontram o negócio.</p></div><div class="card" data-info="Geotague fotos com a localização — melhora a relevância geográfica nas buscas locais."><div class="icon">📍</div><h4>7. Geotagging</h4><p>Marcar fotos com localização.</p></div><div class="card" data-info="Mensagens diretas e reservas online quando fizer sentido. Adiciona um canal a mais de conversão."><div class="icon">🔧</div><h4>8. Recursos extras</h4><p>Mensagens e reservas online.</p></div></div><div class="info" id="infoRecurso">Clique em um recurso para ver detalhes práticos.</div>',
-    css:'body{font-family:Segoe UI,sans-serif;padding:20px;background:#f8fafc;color:#0f172a}h2{font-size:1.1rem;color:#0284c7;margin-bottom:14px}.grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:14px}.card{background:#fff;border:2px solid #cbd5e1;border-top:4px solid #0284c7;border-radius:10px;padding:12px 14px;cursor:pointer;transition:.2s}.card:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(2,132,199,.15)}.card .icon{font-size:1.5rem;margin-bottom:4px}.card h4{font-size:.85rem;color:#0369a1;margin-bottom:4px}.card p{font-size:.75rem;color:#475569;margin:0;line-height:1.4}.card:nth-child(2){border-top-color:#10b981}.card:nth-child(3){border-top-color:#7c3aed}.card:nth-child(4){border-top-color:#ea580c}.card:nth-child(5){border-top-color:#ec4899}.card:nth-child(6){border-top-color:#f59e0b}.card:nth-child(7){border-top-color:#06b6d4}.card:nth-child(8){border-top-color:#8b5cf6}.info{background:#e0f2fe;border-left:4px solid #0284c7;padding:10px 14px;border-radius:6px;font-size:.8rem;color:#0369a1}',
-    js:'document.querySelectorAll(".card").forEach(function(c){c.addEventListener("click",function(){document.getElementById("infoRecurso").textContent=c.dataset.info;});});'
-  }
-];
-
-function montarArquivoUnico(lab){
-  var jsBloco = lab.js ? '\n  <script>\n' + lab.js + '\n  <\/script>\n' : '';
-  return '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>' + lab.titulo + '</title>\n  <style>\n' + lab.css + '\n  </style>\n</head>\n<body>\n' + lab.html + jsBloco + '</body>\n</html>';
-}
-
-function escapeHtml(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function escapeAttr(t){ return String(t).replace(/&/g,'&amp;').replace(/"/g,'&quot;'); }
-
-function renderizarLabs(filtro){
-  var container = document.getElementById('container-labs');
-  container.innerHTML = '';
-  LABS.forEach(function(lab){
-    if(filtro !== 'todos' && lab.categorias.indexOf(filtro) === -1) return;
-    var card = document.createElement('article');
-    card.className = 'lab-card';
-    card.id = 'card-' + lab.id;
-    var arqUnico = montarArquivoUnico(lab);
-    var listaConceitos = lab.conceitos.map(function(c){ return '<li>' + c + '</li>'; }).join('');
-    var listaObservar = lab.observar.map(function(o){ return '<li>' + o + '</li>'; }).join('');
-    var abasHTML = '<button type="button" class="btn-aba active" data-lab="' + lab.id + '" data-pane="tudo">Arquivo Único</button>' +
-                   '<button type="button" class="btn-aba" data-lab="' + lab.id + '" data-pane="html">HTML</button>' +
-                   '<button type="button" class="btn-aba" data-lab="' + lab.id + '" data-pane="css">CSS</button>';
-    var paneJS = '';
-    if (lab.js) {
-      abasHTML += '<button type="button" class="btn-aba" data-lab="' + lab.id + '" data-pane="js">JS</button>';
-      paneJS = '<div class="code-pane" id="' + lab.id + '-pane-js"><pre>' + escapeHtml(lab.js) + '</pre></div>';
-    }
-    card.innerHTML =
-      '<div class="lab-card-header">' +
-        '<div class="lab-tag-meta">' +
-          '<span class="tag-num">' + lab.num + '</span>' +
-          lab.categorias.map(function(cat){ return '<span class="tag-categoria">' + cat.toUpperCase() + '</span>'; }).join('') +
-        '</div>' +
-        '<h3 class="lab-card-title">' + lab.titulo + '</h3>' +
-        '<p class="lab-card-sub">' + lab.sub + '</p>' +
-      '</div>' +
-      '<div class="code-wrapper">' +
-        '<div class="code-toolbar">' +
-          '<div class="code-abas">' + abasHTML + '</div>' +
-          '<div class="code-actions">' +
-            '<button type="button" class="btn-copy" data-copy="' + lab.id + '">📋 Copiar</button>' +
-            '<button type="button" class="btn-prev" data-prev="' + lab.id + '">🧪 Preview</button>' +
-            '<button type="button" class="btn-oc" data-oc="' + lab.id + '">▶️ OneCompiler</button>' +
-            '<button type="button" class="btn-down" data-down="' + lab.id + '">⬇️ Baixar</button>' +
-          '</div>' +
-        '</div>' +
-        '<div class="code-pane active" id="' + lab.id + '-pane-tudo"><pre>' + escapeHtml(arqUnico) + '</pre></div>' +
-        '<div class="code-pane" id="' + lab.id + '-pane-html"><pre>' + escapeHtml(lab.html) + '</pre></div>' +
-        '<div class="code-pane" id="' + lab.id + '-pane-css"><pre>' + escapeHtml(lab.css) + '</pre></div>' +
-        paneJS +
-      '</div>' +
-      '<div id="preview-area-' + lab.id + '"></div>' +
-      '<div class="analise-card">' +
-        '<div class="analise-grid">' +
-          '<div class="analise-box"><h4>📘 Conceitos Demonstrados:</h4><ul>' + listaConceitos + '</ul></div>' +
-          '<div class="analise-box"><h4>🔍 O que Observar no Preview:</h4><ul>' + listaObservar + '</ul></div>' +
-        '</div>' +
-      '</div>';
-    container.appendChild(card);
-  });
-  vincularEventos();
-}
-
-function vincularEventos(){
-  document.querySelectorAll('.btn-aba').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var labId = btn.dataset.lab, pane = btn.dataset.pane;
-      var card = document.getElementById('card-' + labId);
-      card.querySelectorAll('.btn-aba').forEach(function(b){ b.classList.remove('active'); });
-      card.querySelectorAll('.code-pane').forEach(function(p){ p.classList.remove('active'); });
-      btn.classList.add('active');
-      document.getElementById(labId + '-pane-' + pane).classList.add('active');
-    });
-  });
-  document.querySelectorAll('.btn-copy').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var card = document.getElementById('card-' + btn.dataset.copy);
-      copiarTexto(card.querySelector('.code-pane.active pre').textContent);
-    });
-  });
-  document.querySelectorAll('.btn-prev').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var labId = btn.dataset.prev;
-      var lab = LABS.find(function(l){ return l.id === labId; });
-      var area = document.getElementById('preview-area-' + labId);
-      var antigo = area.querySelector('.preview-inline');
-      if(antigo){ antigo.remove(); return; }
-      var caixa = document.createElement('div');
-      caixa.className = 'preview-inline';
-      caixa.innerHTML =
-        '<div class="preview-header"><span>🧪 Preview ao Vivo — ' + lab.num + '</span><button type="button" class="preview-close">✕ Fechar</button></div>' +
-        '<iframe sandbox="allow-scripts allow-forms" srcdoc="' + escapeAttr(montarArquivoUnico(lab)) + '"></iframe>';
-      caixa.querySelector('.preview-close').addEventListener('click', function(){ caixa.remove(); });
-      area.appendChild(caixa);
-    });
-  });
-  document.querySelectorAll('.btn-oc').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var lab = LABS.find(function(l){ return l.id === btn.dataset.oc; });
-      var codigo = montarArquivoUnico(lab);
-      if(navigator.clipboard && window.isSecureContext){
-        navigator.clipboard.writeText(codigo).then(function(){
-          mostrarToast('📋 Código copiado! No OneCompiler que abrir, apague o conteúdo padrão e cole (Ctrl+V).');
-        }).catch(function(){
-          copiarFallback(codigo);
-        });
-      } else {
-        copiarFallback(codigo);
-      }
-      setTimeout(function(){
-        window.open('https://onecompiler.com/html', '_blank', 'noopener');
-      }, 200);
-    });
-  });
-  document.querySelectorAll('.btn-down').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var lab = LABS.find(function(l){ return l.id === btn.dataset.down; });
-      var blob = new Blob([montarArquivoUnico(lab)], { type:'text/html;charset=utf-8' });
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url; a.download = lab.id + '.html';
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      setTimeout(function(){ URL.revokeObjectURL(url); }, 30000);
-      mostrarToast('✅ Download iniciado!');
-    });
-  });
-}
-
-function copiarFallback(texto){
-  var ta = document.createElement('textarea');
-  ta.value = texto; document.body.appendChild(ta); ta.select();
-  try {
-    document.execCommand('copy');
-    mostrarToast('📋 Código copiado! No OneCompiler que abrir, apague o conteúdo padrão e cole (Ctrl+V).');
-  } catch(e){
-    mostrarToast('⚠️ Selecione o código na aba "Arquivo Único" e copie manualmente.');
-  }
-  document.body.removeChild(ta);
-}
-
-function copiarTexto(texto){
-  if(navigator.clipboard && window.isSecureContext){
-    navigator.clipboard.writeText(texto).then(function(){ mostrarToast('✅ Código copiado!'); });
-  } else {
-    var ta = document.createElement('textarea');
-    ta.value = texto; document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); mostrarToast('✅ Código copiado!'); } catch(e){}
-    document.body.removeChild(ta);
-  }
-}
-
-var toastTimer = null;
-function mostrarToast(msg){
-  var t = document.getElementById('toast');
-  t.textContent = msg; t.style.display = 'block';
-  if(toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(function(){ t.style.display = 'none'; }, 4000);
-}
-
-document.querySelectorAll('.btn-filtro').forEach(function(btn){
+document.querySelectorAll('.filtro-btn').forEach(function(btn){
   btn.addEventListener('click', function(){
-    document.querySelectorAll('.btn-filtro').forEach(function(b){ b.classList.remove('active'); });
+    document.querySelectorAll('.filtro-btn').forEach(function(b){ b.classList.remove('active'); });
     btn.classList.add('active');
-    renderizarLabs(btn.dataset.filtro);
+    var filtro = btn.dataset.filtro;
+    document.querySelectorAll('.lab').forEach(function(lab){
+      var cats = (lab.dataset.categoria || '').split(' ');
+      if(filtro === 'todos' || cats.indexOf(filtro) !== -1){
+        lab.style.display = '';
+      } else {
+        lab.style.display = 'none';
+      }
+    });
   });
 });
 
-window.addEventListener('DOMContentLoaded', function(){ renderizarLabs('todos'); });
+function pegarCodigo(labId){
+  var box = document.getElementById('code-' + labId);
+  if(!box) return null;
+  var pre = box.querySelector('pre');
+  if(!pre) return null;
+  return pre.textContent;
+}
+
+function togglePreview(labId){
+  var frame = document.getElementById('frame-' + labId);
+  if(!frame) return;
+  var codigo = pegarCodigo(labId);
+  if(!codigo){ alert('Código do ' + labId + ' não encontrado.'); return; }
+  if(frame.classList.contains('show')){
+    frame.classList.remove('show');
+    return;
+  }
+  var iframe = frame.querySelector('iframe');
+  iframe.srcdoc = codigo;
+  frame.classList.add('show');
+  frame.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function copiarLab(labId){
+  var codigo = pegarCodigo(labId);
+  if(!codigo){ alert('Código do ' + labId + ' não encontrado.'); return; }
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(codigo).then(function(){
+      mostrarToast('✅ Código do ' + labId + ' copiado!');
+    }).catch(function(){ fallbackCopy(codigo); });
+  } else {
+    fallbackCopy(codigo);
+  }
+}
+
+function fallbackCopy(texto){
+  var ta = document.createElement('textarea');
+  ta.value = texto;
+  document.body.appendChild(ta);
+  ta.select();
+  try{ document.execCommand('copy'); mostrarToast('✅ Código copiado!'); }
+  catch(e){ alert('Selecione o código manualmente.'); }
+  document.body.removeChild(ta);
+}
+
+function abrirOneCompiler(labId){
+  copiarLab(labId);
+  setTimeout(function(){
+    window.open('https://onecompiler.com/html', '_blank');
+  }, 300);
+}
+
+function baixarLab(labId){
+  var codigo = pegarCodigo(labId);
+  if(!codigo){ alert('Código do ' + labId + ' não encontrado.'); return; }
+  var blob = new Blob([codigo], {type:'text/html;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = labId + '.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  mostrarToast('⬇️ Download iniciado: ' + labId + '.html');
+}
+
+function mostrarToast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
 </script>
 </body>
 </html>
